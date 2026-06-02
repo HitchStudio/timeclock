@@ -460,6 +460,7 @@ function projCatByName(name) {
   if (!proj || !proj.category_id) return null;
   return state.catMap[proj.category_id] || null;
 }
+function safeStr(s) { return (s||"").replace(/'/g, "\'"); }
 function catBadge(cat) {
   if (!cat) return '<span style="font-size:.7rem;color:var(--text3)">—</span>';
   const c = cat.color || CAT_COLORS[cat.name] || '#64748b';
@@ -483,29 +484,36 @@ async function init() {
     renderNameGrid();
     checkAutoBackup();
   } catch(e) {
-    hideLoading();
-    setSyncStatus('err','&#9679; Offline');
     console.error('Init error:', e);
-    document.getElementById('loadingMsg').textContent = 'Connection error: ' + e.message;
+    const overlay = document.getElementById('loadingOverlay');
+    overlay.style.background = 'rgba(15,17,23,.97)';
+    document.getElementById('loadingMsg').textContent = 'ERROR: ' + e.message;
     document.getElementById('loadingMsg').style.color = '#f7794f';
-    // Show retry button
+    document.getElementById('loadingMsg').style.fontSize = '1rem';
+    document.getElementById('loadingMsg').style.maxWidth = '600px';
+    document.getElementById('loadingMsg').style.wordBreak = 'break-all';
+    const detail = document.createElement('div');
+    detail.style.cssText = 'color:#8b90b0;font-size:.8rem;margin-top:8px;max-width:600px;word-break:break-all;text-align:center;padding:0 20px';
+    detail.textContent = 'Stack: ' + (e.stack||'').slice(0,200);
+    overlay.appendChild(detail);
+    setSyncStatus('err','&#9679; Error');
     const retry = document.createElement('button');
     retry.className = 'btn btn-primary';
-    retry.textContent = 'Retry Connection';
+    retry.textContent = 'Retry';
     retry.style.marginTop = '16px';
-    retry.onclick = () => { document.getElementById('loadingMsg').style.color=''; init(); };
-    document.getElementById('loadingOverlay').appendChild(retry);
+    retry.onclick = () => { detail.remove(); retry.remove(); init(); };
+    overlay.appendChild(retry);
   }
 }
 
 async function loadAll() {
-  setLoadingMsg('Loading employees...');
+  setLoadingMsg('Step 1 of 4: Loading employees...');
   state.employees = await sb.get('employees','order=name');
-  setLoadingMsg('Loading categories...');
+  setLoadingMsg('Step 2 of 4: Loading categories... ✓ ' + state.employees.length + ' employees');
   state.categories = await sb.get('categories','order=sort_order');
-  setLoadingMsg('Loading projects...');
+  setLoadingMsg('Step 3 of 4: Loading projects... ✓ ' + state.categories.length + ' categories');
   state.projects = await sb.get('projects','order=name');
-  setLoadingMsg('Loading settings...');
+  setLoadingMsg('Step 4 of 4: Loading settings... ✓ ' + state.projects.length + ' projects');
   const settings = await sb.get('settings','');
   state.settings = {};
   settings.forEach(s => state.settings[s.key] = s.value);
@@ -639,7 +647,7 @@ function renderTimerProjList() {
   if(!projs.length){wrap.innerHTML='<div class="empty-state" style="padding:14px">No projects match.</div>';return;}
   wrap.innerHTML=projs.map(p=>{
     const cat=p.category_id?state.catMap[p.category_id]:null;
-    return `<div class="proj-item ${timerProjSelected===p.id?'selected':''}" onclick="selectTimerProj(${p.id},'${p.name.replace(/'/g,"\'").replace(/\/g,'\\')}')">  <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name}</span><span>${catBadge(cat)}</span></div>`;
+    return `<div class="proj-item ${timerProjSelected===p.id?'selected':''}" onclick="selectTimerProj(${p.id},'${safeStr(p.name)}')">  <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name}</span><span>${catBadge(cat)}</span></div>`;
   }).join('');
 }
 
@@ -651,7 +659,7 @@ function renderManProjList() {
   if(!projs.length){wrap.innerHTML='<div class="empty-state" style="padding:14px">No projects match.</div>';return;}
   wrap.innerHTML=projs.map(p=>{
     const cat=p.category_id?state.catMap[p.category_id]:null;
-    return `<div class="proj-item ${manProjSelected===p.id?'selected':''}" onclick="selectManProj(${p.id},'${p.name.replace(/'/g,"\'").replace(/\/g,'\\')}')"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name}</span><span>${catBadge(cat)}</span></div>`;
+    return `<div class="proj-item ${manProjSelected===p.id?'selected':''}" onclick="selectManProj(${p.id},'${safeStr(p.name)}')"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name}</span><span>${catBadge(cat)}</span></div>`;
   }).join('');
 }
 
@@ -1107,7 +1115,7 @@ function renderManageTab() {
           <div style="margin-top:2px">${catBadge(cat)}</div>
         </div>
         <div style="display:flex;gap:2px;flex-shrink:0">
-          <button class="edit-btn" onclick="startEditProj(${p.id},'${p.name.replace(/'/g,"\'")}')">&#9998;</button>
+          <button class="edit-btn" onclick="startEditProj(${p.id},'${safeStr(p.name)}')">&#9998;</button>
           <button class="delete-btn" onclick="removeProject(${p.id})">✕</button>
         </div>
       </div>
@@ -1297,7 +1305,12 @@ function checkAutoBackup() {
 let toastTimer;
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.style.opacity='0',2600);}
 
-init();
+// Start app safely after DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
 </script>
 </body>
 </html>
