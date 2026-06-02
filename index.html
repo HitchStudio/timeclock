@@ -6,33 +6,38 @@
 <title>TimeClock Pro</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2e3350;--accent:#4f8ef7;--accent2:#34d9a5;--warn:#f7794f;--purple:#a78bfa;--text:#e8eaf6;--text2:#8b90b0;--text3:#555a7a;--card:#1e2235;--radius:12px;}
+:root{
+  --bg:#f8f9fc;--surface:#ffffff;--surface2:#f1f3f8;--border:#e2e6f0;
+  --accent:#4f8ef7;--accent2:#16a97a;--warn:#e85d30;--purple:#7c5cbf;
+  --text:#1a1d2e;--text2:#555a7a;--text3:#9ba3c0;--card:#ffffff;--radius:12px;
+  --shadow:0 1px 4px rgba(0,0,0,.08);
+}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
-.header{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow);}
 .logo{font-size:1.1rem;font-weight:700;}.logo span{color:var(--accent);}
 .sync-status{font-size:.75rem;padding:4px 10px;border-radius:20px;font-weight:600;}
-.sync-ok{background:rgba(52,217,165,.15);color:var(--accent2);}
-.sync-err{background:rgba(247,121,79,.15);color:var(--warn);}
-.sync-loading{background:rgba(79,142,247,.15);color:var(--accent);}
+.sync-ok{background:#dcfce7;color:#16a34a;}
+.sync-err{background:#fee2e2;color:#dc2626;}
+.sync-loading{background:#dbeafe;color:#2563eb;}
 .nav-pills{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
 .pill{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:.8rem;cursor:pointer;color:var(--text2);transition:all .2s;}
 .pill:hover{border-color:var(--accent);color:var(--accent);}
 .pill.active{background:var(--accent);color:#fff;border-color:var(--accent);}
-.main{max-width:1000px;margin:0 auto;padding:24px 14px;}
+.main{max-width:1040px;margin:0 auto;padding:24px 14px;}
 .view{display:none;}.view.active{display:block;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;box-shadow:var(--shadow);}
 .card-title{font-size:.67rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
 label{display:block;font-size:.81rem;color:var(--text2);margin-bottom:4px;font-weight:500;}
 input,select{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.87rem;padding:9px 11px;outline:none;transition:border-color .2s;font-family:inherit;}
 input:focus,select:focus{border-color:var(--accent);}
-select option{background:var(--surface2);}
+select option{background:var(--surface);}
 .btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:8px;padding:9px 16px;font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .18s;}
 .btn-primary{background:var(--accent);color:#fff;}.btn-primary:hover{background:#3a7ae0;}
-.btn-success{background:var(--accent2);color:#0f1117;}.btn-success:hover{background:#28c494;}
-.btn-danger{background:var(--warn);color:#fff;}.btn-danger:hover{background:#e06030;}
+.btn-success{background:var(--accent2);color:#fff;}.btn-success:hover{background:#0f8f66;}
+.btn-danger{background:var(--warn);color:#fff;}.btn-danger:hover{background:#c44820;}
 .btn-ghost{background:var(--surface2);color:var(--text);border:1px solid var(--border);}.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
-.btn-purple{background:var(--purple);color:#fff;}.btn-purple:hover{background:#9172e8;}
+.btn-purple{background:var(--purple);color:#fff;}.btn-purple:hover{background:#6448a8;}
 .btn-sm{padding:5px 11px;font-size:.78rem;}.btn:disabled{opacity:.4;cursor:not-allowed;}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
@@ -41,31 +46,31 @@ select option{background:var(--surface2);}
 .select-screen h1{font-size:1.7rem;font-weight:700;margin-bottom:6px;}
 .select-screen p{color:var(--text2);margin-bottom:20px;}
 .name-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;max-width:720px;margin:0 auto 20px;}
-.name-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 8px;cursor:pointer;font-size:.84rem;font-weight:500;color:var(--text);text-align:center;transition:all .18s;}
-.name-btn:hover{border-color:var(--accent);background:var(--surface2);}
-.name-btn.selected{border-color:var(--accent);background:rgba(79,142,247,.12);color:var(--accent);}
+.name-btn{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 8px;cursor:pointer;font-size:.84rem;font-weight:500;color:var(--text);text-align:center;transition:all .18s;box-shadow:var(--shadow);}
+.name-btn:hover{border-color:var(--accent);background:#eff6ff;}
+.name-btn.selected{border-color:var(--accent);background:#eff6ff;color:var(--accent);}
 .name-btn.clocked-in{border-color:var(--accent2);}
 .timer-display{font-family:'Courier New',monospace;font-size:2.6rem;font-weight:700;color:var(--accent2);text-align:center;padding:16px 0 6px;letter-spacing:3px;}
 .timer-status{text-align:center;font-size:.81rem;color:var(--text3);margin-bottom:16px;}
 .table-wrap{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;font-size:.83rem;}
-th{text-align:left;padding:8px 10px;font-size:.69rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);white-space:nowrap;}
-td{padding:9px 10px;border-bottom:1px solid rgba(46,51,80,.5);color:var(--text2);vertical-align:middle;}
+th{text-align:left;padding:8px 10px;font-size:.69rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);border-bottom:2px solid var(--border);white-space:nowrap;background:var(--surface2);}
+td{padding:9px 10px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle;}
 tr:last-child td{border-bottom:none;}
-tr:hover td{background:rgba(79,142,247,.04);}
+tr:hover td{background:#f8faff;}
 .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.73rem;font-weight:600;}
-.badge-blue{background:rgba(79,142,247,.15);color:var(--accent);}
+.badge-blue{background:#dbeafe;color:#2563eb;}
 .stat{text-align:center;padding:8px;}
 .stat-val{font-size:1.4rem;font-weight:700;color:var(--accent);}
 .stat-val.green{color:var(--accent2);}.stat-val.purple{color:var(--purple);}
-.tabs{display:flex;gap:3px;background:var(--surface2);border-radius:10px;padding:3px;margin-bottom:20px;flex-wrap:wrap;}
+.tabs{display:flex;gap:3px;background:var(--surface2);border-radius:10px;padding:3px;margin-bottom:20px;flex-wrap:wrap;border:1px solid var(--border);}
 .tab{flex:1;min-width:60px;text-align:center;padding:7px 4px;border-radius:7px;cursor:pointer;font-size:.82rem;font-weight:500;color:var(--text2);transition:all .18s;}
-.tab.active{background:var(--card);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.tab.active{background:var(--card);color:var(--accent);box-shadow:var(--shadow);font-weight:700;}
 .login-wrap{max-width:340px;margin:50px auto;}
 .alert{border-radius:8px;padding:10px 13px;font-size:.82rem;margin-bottom:12px;}
-.alert-info{background:rgba(79,142,247,.12);border:1px solid rgba(79,142,247,.3);color:#7ab0ff;}
-.alert-warn{background:rgba(247,121,79,.12);border:1px solid rgba(247,121,79,.3);color:var(--warn);}
-.alert-success{background:rgba(52,217,165,.12);border:1px solid rgba(52,217,165,.3);color:var(--accent2);}
+.alert-info{background:#dbeafe;border:1px solid #bfdbfe;color:#1d4ed8;}
+.alert-warn{background:#fee2e2;border:1px solid #fecaca;color:#dc2626;}
+.alert-success{background:#dcfce7;border:1px solid #bbf7d0;color:#16a34a;}
 .flex-between{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
 .flex-center{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 .mt8{margin-top:8px;}.mt12{margin-top:12px;}.mt16{margin-top:16px;}.mb8{margin-bottom:8px;}.mb12{margin-bottom:12px;}.mb16{margin-bottom:16px;}
@@ -79,26 +84,31 @@ tr:hover td{background:rgba(79,142,247,.04);}
 .edit-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:.85rem;padding:2px 5px;border-radius:4px;}
 .edit-btn:hover{color:var(--accent);}
 .empty-state{text-align:center;padding:30px 14px;color:var(--text3);font-size:.87rem;}
-#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent2);color:#0f1117;padding:9px 20px;border-radius:30px;font-weight:600;font-size:.84rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;}
-tfoot td{border-top:1px solid var(--border);font-weight:600!important;color:var(--text)!important;}
-.profit-bar{height:8px;border-radius:4px;background:var(--surface2);margin-top:4px;overflow:hidden;}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--accent2);color:#fff;padding:9px 20px;border-radius:30px;font-weight:600;font-size:.84rem;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.2);}
+tfoot td{border-top:2px solid var(--border);font-weight:600!important;color:var(--text)!important;background:var(--surface2);}
+.profit-bar{height:8px;border-radius:4px;background:var(--surface2);margin-top:4px;overflow:hidden;border:1px solid var(--border);}
 .profit-fill{height:100%;border-radius:4px;}
 .search-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.85rem;padding:7px 11px;outline:none;font-family:inherit;}
 .search-input:focus{border-color:var(--accent);}
 .edit-row{display:none;padding:6px 0;gap:6px;align-items:stretch;flex-direction:column;}
 .edit-row.active{display:flex;}
-.cat-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
-.cat-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:20px;font-size:.78rem;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .18s;white-space:nowrap;}
-.proj-list{max-height:220px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;background:var(--surface2);}
-.proj-item{padding:9px 12px;cursor:pointer;font-size:.86rem;border-bottom:1px solid rgba(46,51,80,.4);transition:background .15s;display:flex;align-items:center;justify-content:space-between;}
+.cat-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+.cat-chip{display:inline-flex;align-items:center;padding:4px 11px;border-radius:20px;font-size:.77rem;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:all .18s;white-space:nowrap;}
+.proj-list{max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;background:var(--surface);}
+.proj-item{padding:9px 12px;cursor:pointer;font-size:.86rem;border-bottom:1px solid var(--border);transition:background .15s;display:flex;align-items:center;justify-content:space-between;}
 .proj-item:last-child{border-bottom:none;}
-.proj-item:hover{background:rgba(79,142,247,.1);}
-.proj-item.selected{background:rgba(79,142,247,.18);color:var(--accent);}
-.loading-overlay{position:fixed;inset:0;background:rgba(15,17,23,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:500;gap:16px;}
+.proj-item:hover{background:#f0f4ff;}
+.proj-item.selected{background:#eff6ff;color:var(--accent);font-weight:500;}
+.loading-overlay{position:fixed;inset:0;background:rgba(248,249,252,.95);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:500;gap:16px;}
 .spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
-.import-progress{width:280px;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+.import-progress{width:280px;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;border:1px solid var(--border);}
 .import-fill{height:100%;background:var(--accent2);border-radius:3px;transition:width .3s;}
+/* Pie chart */
+.pie-wrap{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start;}
+.pie-legend{flex:1;min-width:200px;}
+.legend-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:.83rem;}
+.legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -112,13 +122,10 @@ tfoot td{border-top:1px solid var(--border);font-weight:600!important;color:var(
   </div>
 </div>
 
-<!-- Loading overlay -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
-  <div style="color:var(--text);font-weight:600" id="loadingMsg">Connecting to database...</div>
-  <div class="import-progress" id="importProgressWrap" style="display:none">
-    <div class="import-fill" id="importFill" style="width:0%"></div>
-  </div>
+  <div style="color:var(--text);font-weight:600;font-size:1rem" id="loadingMsg">Connecting to database...</div>
+  <div class="import-progress" id="importProgressWrap" style="display:none"><div class="import-fill" id="importFill" style="width:0%"></div></div>
   <div class="text-sm" id="importDetail"></div>
 </div>
 
@@ -129,24 +136,45 @@ tfoot td{border-top:1px solid var(--border);font-weight:600!important;color:var(
       <div class="select-screen">
         <h1>Who are you?</h1>
         <p>Select your name to clock in or log time</p>
-        <div style="margin-bottom:14px"><input class="search-input" type="text" id="empSearch" placeholder="&#128269; Search your name..." oninput="renderNameGrid()" style="width:260px"></div>
+        <div style="margin-bottom:14px"><input class="search-input" type="text" id="empSearch" placeholder="&#128269; Search your name..." oninput="renderNameGrid()" style="width:280px"></div>
         <div class="name-grid" id="nameGrid"></div>
         <button class="btn btn-primary" onclick="confirmEmployee()" id="confirmEmpBtn" disabled>Continue &#8594;</button>
       </div>
     </div>
     <div id="step-entry" style="display:none">
       <div class="flex-between mb12">
-        <div>
-          <div style="font-size:1.3rem;font-weight:700" id="empGreeting"></div>
-          <div class="text-sm" id="empSubtitle"></div>
-        </div>
+        <div><div style="font-size:1.3rem;font-weight:700" id="empGreeting"></div><div class="text-sm" id="empSubtitle"></div></div>
         <button class="btn btn-ghost btn-sm" onclick="backToSelect()">&#8592; Switch User</button>
       </div>
+
+      <!-- MANUAL ENTRY FIRST -->
+      <div class="card">
+        <div class="card-title">&#9998; Manual Time Entry</div>
+        <div class="grid3">
+          <div><label>Date</label><input type="date" id="manDate"></div>
+          <div><label>Start Time</label><input type="time" id="manStart"></div>
+          <div><label>End Time</label><input type="time" id="manEnd"></div>
+        </div>
+        <div class="mt12">
+          <!-- Search ABOVE chips -->
+          <div class="mb8"><input class="search-input w100" type="text" id="manProjSearch" placeholder="&#128269; Search project..." oninput="renderManProjList()"></div>
+          <label>Filter by Category</label>
+          <div class="cat-chips" id="manCatChips"></div>
+          <label>Select Project <span class="text-sm" id="manSelLabel" style="color:var(--accent)"></span></label>
+          <div class="proj-list" id="manProjList"></div>
+          <input type="hidden" id="manProject">
+        </div>
+        <div class="mt12"><label>Notes (optional)</label><input type="text" id="manNotes" placeholder="Description of work"></div>
+        <div class="mt12 text-right"><button class="btn btn-primary" onclick="addManualEntry()">+ Add Entry</button></div>
+      </div>
+
+      <!-- LIVE TIMER SECOND -->
       <div class="card">
         <div class="card-title">&#9203; Live Timer</div>
+        <!-- Search ABOVE chips -->
+        <div class="mb8"><input class="search-input w100" type="text" id="timerProjSearch" placeholder="&#128269; Search project..." oninput="renderTimerProjList()"></div>
         <label>Filter by Category</label>
         <div class="cat-chips" id="timerCatChips"></div>
-        <div class="mb8"><input class="search-input w100" type="text" id="timerProjSearch" placeholder="&#128269; Search project..." oninput="renderTimerProjList()"></div>
         <label>Select Project <span class="text-sm" id="timerSelLabel" style="color:var(--accent)"></span></label>
         <div class="proj-list" id="timerProjList"></div>
         <input type="hidden" id="timerProject">
@@ -158,24 +186,8 @@ tfoot td{border-top:1px solid var(--border);font-weight:600!important;color:var(
           <button class="btn btn-danger" id="clockOutBtn" onclick="clockOut()" disabled>&#9632; Clock Out</button>
         </div>
       </div>
-      <div class="card">
-        <div class="card-title">&#9998; Manual Time Entry</div>
-        <div class="grid3">
-          <div><label>Date</label><input type="date" id="manDate"></div>
-          <div><label>Start Time</label><input type="time" id="manStart"></div>
-          <div><label>End Time</label><input type="time" id="manEnd"></div>
-        </div>
-        <div class="mt12">
-          <label>Filter by Category</label>
-          <div class="cat-chips" id="manCatChips"></div>
-          <div class="mb8"><input class="search-input w100" type="text" id="manProjSearch" placeholder="&#128269; Search project..." oninput="renderManProjList()"></div>
-          <label>Select Project <span class="text-sm" id="manSelLabel" style="color:var(--accent)"></span></label>
-          <div class="proj-list" id="manProjList"></div>
-          <input type="hidden" id="manProject">
-        </div>
-        <div class="mt12"><label>Notes (optional)</label><input type="text" id="manNotes" placeholder="Description of work"></div>
-        <div class="mt12 text-right"><button class="btn btn-primary" onclick="addManualEntry()">+ Add Entry</button></div>
-      </div>
+
+      <!-- MILEAGE -->
       <div class="card">
         <div class="card-title">&#128663; Mileage Log</div>
         <div class="grid3">
@@ -185,12 +197,19 @@ tfoot td{border-top:1px solid var(--border);font-weight:600!important;color:var(
         </div>
         <div class="mt12 text-right"><button class="btn btn-ghost" onclick="addMileage()">+ Log Mileage</button></div>
       </div>
+
+      <!-- MY ENTRIES -->
       <div class="card">
         <div class="flex-between mb12">
-          <div class="card-title" style="margin:0">&#128203; My Entries — Current Pay Period</div>
-          <div class="period-badge" id="empPeriodBadge"></div>
+          <div class="card-title" style="margin:0">&#128203; My Entries</div>
+          <div class="flex-center" style="gap:6px">
+            <input type="date" id="empFromDate" onchange="renderEmpEntries()" title="From date">
+            <span class="text-sm">to</span>
+            <input type="date" id="empToDate" onchange="renderEmpEntries()" title="To date">
+            <div class="period-badge" id="empPeriodBadge"></div>
+          </div>
         </div>
-        <div id="empEntriesWrap"><div class="empty-state">No entries yet this pay period.</div></div>
+        <div id="empEntriesWrap"><div class="empty-state">No entries yet.</div></div>
         <div class="grid3 mt16">
           <div class="stat"><div class="stat-val green" id="empTotalHours">0.0</div><div class="stat-label">Total Hours</div></div>
           <div class="stat"><div class="stat-val" id="empTotalMiles">0.0</div><div class="stat-label">Total Miles</div></div>
@@ -227,6 +246,7 @@ tfoot td{border-top:1px solid var(--border);font-weight:600!important;color:var(
       </div>
       <div class="tabs">
         <div class="tab active" onclick="mgrTab('overview')">Overview</div>
+        <div class="tab" onclick="mgrTab('analytics')">Analytics</div>
         <div class="tab" onclick="mgrTab('profitability')">Profitability</div>
         <div class="tab" onclick="mgrTab('entries')">Entries</div>
         <div class="tab" onclick="mgrTab('mileage')">Mileage</div>
@@ -234,6 +254,7 @@ tfoot td{border-top:1px solid var(--border);font-weight:600!important;color:var(
         <div class="tab" onclick="mgrTab('export')">Export</div>
       </div>
 
+      <!-- OVERVIEW -->
       <div id="tab-overview">
         <div class="card">
           <div class="flex-between mb12">
@@ -252,15 +273,43 @@ tfoot td{border-top:1px solid var(--border);font-weight:600!important;color:var(
         </div>
       </div>
 
-      <div id="tab-profitability" style="display:none">
+      <!-- ANALYTICS TAB: pie chart + employee hours -->
+      <div id="tab-analytics" style="display:none">
         <div class="card">
           <div class="flex-between mb12">
-            <div class="card-title" style="margin:0">&#128200; Avg Hours per Event by Category</div>
-            <select id="avgYear" onchange="renderCategoryAverages()" style="width:110px"></select>
+            <div class="card-title" style="margin:0">&#127968; Hours by Category</div>
+            <div class="flex-center" style="gap:8px">
+              <input type="date" id="pieFrom" onchange="renderPieChart()" style="width:150px">
+              <span class="text-sm">to</span>
+              <input type="date" id="pieTo" onchange="renderPieChart()" style="width:150px">
+              <button class="btn btn-ghost btn-sm" onclick="setPieCurrentPeriod()">This Period</button>
+              <button class="btn btn-ghost btn-sm" onclick="setPieThisYear()">This Year</button>
+            </div>
           </div>
-          <div class="text-sm mb12">Total hours ÷ unique projects per category. Key metric for checking your profitability window.</div>
+          <div id="pieChartWrap"><div class="empty-state">Select a date range above.</div></div>
+        </div>
+        <div class="card">
+          <div class="flex-between mb12">
+            <div class="card-title" style="margin:0">&#128100; Hours by Employee</div>
+            <div class="flex-center" style="gap:8px">
+              <input type="date" id="empHrsFrom" onchange="renderEmpHours()" style="width:150px">
+              <span class="text-sm">to</span>
+              <input type="date" id="empHrsTo" onchange="renderEmpHours()" style="width:150px">
+              <button class="btn btn-ghost btn-sm" onclick="setEmpHrsCurrentPeriod()">This Period</button>
+              <button class="btn btn-ghost btn-sm" onclick="setEmpHrsThisYear()">This Year</button>
+            </div>
+          </div>
+          <div id="empHoursWrap"><div class="empty-state">Select a date range above.</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">&#128200; Avg Hours / Event by Category</div>
+          <div class="flex-center mb12"><select id="avgYear" onchange="renderCategoryAverages()" style="width:120px"></select></div>
           <div id="catAvgTable"><div class="empty-state">Loading...</div></div>
         </div>
+      </div>
+
+      <!-- PROFITABILITY -->
+      <div id="tab-profitability" style="display:none">
         <div class="card">
           <div class="card-title">Hours &amp; Profitability by Project</div>
           <div class="flex-center mb12" style="flex-wrap:wrap;gap:8px">
@@ -288,6 +337,7 @@ tfoot td{border-top:1px solid var(--border);font-weight:600!important;color:var(
         </div>
       </div>
 
+      <!-- ENTRIES -->
       <div id="tab-entries" style="display:none">
         <div class="card">
           <div class="flex-between mb12">
@@ -307,26 +357,30 @@ tfoot td{border-top:1px solid var(--border);font-weight:600!important;color:var(
         </div>
       </div>
 
+      <!-- MILEAGE - now with date filter -->
       <div id="tab-mileage" style="display:none">
         <div class="card">
           <div class="flex-between mb12">
             <div class="card-title" style="margin:0">Mileage Log</div>
-            <select id="filterMileEmp" onchange="renderMileage()" style="width:160px"><option value="">All Employees</option></select>
+            <div class="flex-center" style="gap:6px;flex-wrap:wrap">
+              <select id="filterMileEmp" onchange="renderMileage()" style="width:150px"><option value="">All Employees</option></select>
+              <input type="date" id="filterMileFrom" onchange="renderMileage()" title="From">
+              <input type="date" id="filterMileTo" onchange="renderMileage()" title="To">
+              <button class="btn btn-ghost btn-sm" onclick="clearMileFilters()">Clear</button>
+            </div>
           </div>
           <div class="table-wrap" id="mileageWrap"><div class="empty-state">No mileage entries.</div></div>
         </div>
       </div>
 
+      <!-- MANAGE -->
       <div id="tab-manage" style="display:none">
         <div class="grid2">
           <div class="card">
             <div class="card-title">Employees <span id="empCount" style="color:var(--accent)"></span></div>
             <div class="mb8"><input class="search-input w100" type="text" id="empFilterMgr" placeholder="&#128269; Filter..." oninput="renderManageTab()"></div>
             <div style="max-height:360px;overflow-y:auto" id="empListMgr" class="mb12"></div>
-            <div class="flex-center">
-              <input type="text" id="newEmpName" placeholder="Full name" style="flex:1" onkeydown="if(event.key==='Enter')addEmployee()">
-              <button class="btn btn-primary btn-sm" onclick="addEmployee()">+ Add</button>
-            </div>
+            <div class="flex-center"><input type="text" id="newEmpName" placeholder="Full name" style="flex:1" onkeydown="if(event.key==='Enter')addEmployee()"><button class="btn btn-primary btn-sm" onclick="addEmployee()">+ Add</button></div>
           </div>
           <div class="card">
             <div class="card-title">Projects <span id="projCount" style="color:var(--accent)"></span></div>
@@ -337,11 +391,7 @@ tfoot td{border-top:1px solid var(--border);font-weight:600!important;color:var(
               </div>
             </div>
             <div style="max-height:360px;overflow-y:auto" id="projListMgr" class="mb12"></div>
-            <div class="flex-center">
-              <input type="text" id="newProjName" placeholder="Project name" style="flex:1" onkeydown="if(event.key==='Enter')addProject()">
-              <select id="newProjCat" style="width:130px"><option value="">No category</option></select>
-              <button class="btn btn-primary btn-sm" onclick="addProject()">+ Add</button>
-            </div>
+            <div class="flex-center"><input type="text" id="newProjName" placeholder="Project name" style="flex:1"><select id="newProjCat" style="width:130px"><option value="">No category</option></select><button class="btn btn-primary btn-sm" onclick="addProject()">+ Add</button></div>
           </div>
         </div>
         <div class="card">
@@ -350,18 +400,16 @@ tfoot td{border-top:1px solid var(--border);font-weight:600!important;color:var(
             <div><label>New Manager Password</label><input type="password" id="newPassword" placeholder="New password"></div>
             <div style="display:flex;align-items:flex-end"><button class="btn btn-ghost" onclick="changePassword()">Update Password</button></div>
           </div>
-          <div class="mt12">
-            <label>Pay Period Anchor Date</label>
-            <input type="date" id="periodStartDate" onchange="savePeriodStart()" style="max-width:200px">
-          </div>
+          <div class="mt12"><label>Pay Period Anchor Date</label><input type="date" id="periodStartDate" onchange="savePeriodStart()" style="max-width:200px"></div>
         </div>
         <div class="card">
           <div class="card-title">&#128190; Backup</div>
-          <p class="text-sm mb12">Download a full JSON backup of all data. Your Supabase database is the live source of truth, but keeping local backups is good practice.</p>
+          <p class="text-sm mb12">Download a full backup of all data regularly.</p>
           <button class="btn btn-purple" onclick="exportBackup()">&#128190; Download Full Backup</button>
         </div>
       </div>
 
+      <!-- EXPORT -->
       <div id="tab-export" style="display:none">
         <div class="card">
           <div class="card-title">Export Payroll Report</div>
@@ -369,9 +417,10 @@ tfoot td{border-top:1px solid var(--border);font-weight:600!important;color:var(
             <div><label>Pay Period</label><select id="exportPeriod" onchange="renderExportPreview()"></select></div>
             <div><label>Employee</label><select id="exportEmployee" onchange="renderExportPreview()"><option value="">All Employees</option></select></div>
           </div>
-          <div class="alert alert-info mb12">Exports all entries with employee, date, times, hours, project, category, notes, and mileage.</div>
+          <div class="alert alert-info mb12">Exports employee, date, times, hours, project, category, notes, and mileage.</div>
           <div class="flex-center">
-            <button class="btn btn-success" onclick="exportExcel()">&#11015; Excel (.xlsx)</button>
+            <button class="btn btn-success" onclick="exportExcel()">&#11015; Pay Period Excel</button>
+            <button class="btn btn-primary" onclick="exportAllExcel()">&#11015; ALL Entries Excel</button>
             <button class="btn btn-ghost" onclick="exportCSV()">&#11015; CSV</button>
           </div>
         </div>
@@ -386,28 +435,19 @@ tfoot td{border-top:1px solid var(--border);font-weight:600!important;color:var(
 <script>
 const SB_URL = 'https://ofgulxchhcktmjwjarzn.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9mZ3VseGNoaGNrdG1qd2phcnpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMzkwNTQsImV4cCI6MjA5NTkxNTA1NH0.7Kf-zf5AJf19GtwRuxoh_y1vRAY4mtl-yfIqbyy0FXs';
-const IMPORT_DATA = [];
-
+const SEED_PROJ_CATS = {"2024 Option 1 Banquet (9/10/24)": "Events", "2026 SDSU JASA (5/2/26)": "Events", "Admin Tasks/ Staff Meetings": "Admin", "Anna Rasmussen Graduation (5/16/26)": "Events", "Balloons": "Balloons", "Bobcat Backers (3/29/25) - HITCH": "Events", "Bobcat Backers_3-28-26_(HITCH)": "Events", "Brittany Loonan Dance Floor_8-16-25_HITCH": "Events", "Brookings Health (3/20/26)": "Events", "Business development/Networking": "Marketing", "CASA_5-8-26_(HITCH)": "Events", "CASA_5-9-25_(HITCH)": "Events", "CeilingInstall_6-7-25_(HITCH)": "Admin", "Drive Time & Mileage": "Admin", "Faith Wiese Graduation (5/15/26)": "Events", "Glenda Odegaard Anniversary_6-27-26": "Events", "Got Milk Gala (5/30/24)": "Events", "Got Milk Gala_(5-28-26)_HITCH": "Events", "Holiday Hours": "Holiday Hours/PTO", "Hope Harbor (10/4/24)_HITCH": "Events", "Hope Harbor_10-3-25": "Events", "Kate Kirkebak + Gavin Olson (8/9/25)": "3 Carat", "Katie Wollschager + Mason Riley (8/2/25)": "Events", "Madison Healthcare Gala_12-5-25_(HITCH)": "Events", "Mariah Pistorius + Nick Olson (9/20/25)": "2 Carat", "Marketing (Social media, bridal shows, styled shoots)": "Marketing", "Morgan Erikson + Gavin Gordon (7/19/25)": "3 Carat", "Northern Night 2025_11-14-25_(HITCH)": "Events", "Northern Night_11-6-26_(HITCH)": "Events", "Officiating/Elopements": "Officiating", "Option 1 (9/9/25) - HITCH": "Events", "Option 1 Banquet_9-17-26": "Events", "PTO": "Holiday Hours/PTO", "Part-Time // Hitch Admin Work": "Admin", "Rachel Retterath (8/2/2025)": "2 Carat", "Rasmussen Graduation_5-16-26_(HITCH)": "Events", "Rental Admin": "Admin", "Rental Event": "Rentals", "Rentals": "Rentals", "SDSU Distinguished Alumni Banquet Rentals (10-11-24)_HITCH": "Rentals", "Safe Harbor Mardi Gras_1-31-26_HITCH": "Events", "Sales (lead meeting, lead emails)": "Marketing", "Schade Admin": "Schade", "St. Thomas Aquinas Gala_(11-1-25)": "Events", "St. Thomas More Gala_1-31-26_HITCH": "Events", "Stationery": "Design", "Training": "Admin", "Wedding Day Designer": "Design", "Whole Lotta Lovely Wedding Tour_06-01-25_(HITCH)": "Events", "Abigail Vlaminck + Derek Johnson (10/2/26) - SCHADE": "Schade", "Ahna Schweigert + Westin Trenhaile (7/17/27) SCHADE": "Schade", "Alaina Berger + Sterling Rasch (9/19/26) - SCHADE": "Diamond", "Alexis Mcguire + Walker Risa (8/22/26) - SCHADE": "1 Carat", "Alexis Studenski + Matt Larson (5/31/2025) - SCHADE": "Schade", "Alicia Garrow + Ryan Barker (6/6/26) - SCHADE": "Diamond", "Allea Klauenberg + Jack Hoffman (10/10/2026) - SCHADE": "Schade", "Allie Steffensen + Connor Gerber (6/27/25) (SCHADE)": "Schade", "Allison Bruns + Ty (8/8/2025) SCHADE": "Schade", "Ashlee Hausmann + Justin Sears (8/29/26) - SCHADE": "Schade", "Ashtyn Abraham + Brandon Benike (6/22/25) - SCHADE": "Schade", "Cali Christianson + Cade Sorensen (8/2/25) SCHADE": "2 Carat", "Cassidy Bridges + Logan Ekern (8/30/25) - SCHADE": "Schade", "Cassie Timm + Josh Grace (8/9/25) - SCHADE": "Schade", "Claire Olson + Ryan Engstrom (8/21/27) - SCHADE": "Schade", "Dayna Madsen + Ethan Koerlin (9/13/25) - SCHADE": "Schade", "Delaney Kucera + Brandon Schuldt (8/16/25) - SCHADE": "Schade", "Elizabeth Olsen + Cody Larson )10/11/25) - SCHADE": "Schade", "Emily Nold + Ty Schoelerman (7/5/2025) - SCHADE": "Schade", "Emma Chicoine + Zach Heins (5/30/26) - SCHADE": "Schade", "Emma Deboer + Noah Steinlicht (10/4/25) - SCHADE": "Schade", "Emma Hardin + Matthew Girard (7/25/26) - SCHADE": "2 Carat", "Haleigh Carey + Nicholas Schaefer (9-26-26) - SCHADE": "Schade", "Haley Morrison + Tucker Christie (6/20/25) - SCHADE": "Schade", "Haley Rippert + Keith Whitburn (8/15/25) - SCHADE": "Schade", "Jade Chasing Hawk + Brayden Nielsen (8/15/26) - SCHADE": "Schade", "Jeny Johnson + Blake Enstad (6/5/27) SCHADE": "Schade", "Jessica Sigdahl + Jaydon Estebo (7/18/26) - SCHADE": "Schade", "Jessica Welu + Luke Fawcett (6/13/2025) SCHADE": "2 Carat", "Kali Skogstad + Dylan Park (9/6/25) - SCHADE": "Schade", "Kaylee Kroger + Mark Hague (8/8/26) - SCHADE": "Schade", "Kaylee Kropuenske + Chase Hatlewick (7/12) - SCHADE": "Schade", "Leah Odle + Kaleb Sly (9/25/26) - SCHADE": "Schade", "Lexi Herding + Andrew Kranhold (8/1/26) - SCHADE": "Schade", "Lynsey Stevens + Kevin Strickland (8/28/27) - SCHADE": "Schade", "Madison Siers + Stran Kruse (7/11/26) - SCHADE": "Schade", "Mckenzie Bowers + Tucker Hartlaub (7/19/25) - SCHADE": "Schade", "Megan Heidenreich + Nicholas Brandner (9/12/25) - SCHADE": "Schade", "Megan Smith + Austin Deibert (6/21/2025) - SCHADE": "Schade", "Molly Steffensen + Joseph Halbur (7/25/2025) - SCHADE": "Schade", "Morgan DeLange + Jacob Gerber (6/7/25) - SCHADE": "3 Carat", "Morgan Hoff + Chris Nelson (9/27/25) - SCHADE": "Schade", "Nicole Larson + Aaron Fullerton (9/20/25) - SCHADE": "Schade", "Rachel Groth+Trevor Frost (9/5/26) - SCHADE": "Schade", "Ross Johnson + Kasey Teigen (7/26/2025) SCHADE": "1 Carat", "Rynn Osthus + Hayden Schmidt (6/19/26) - SCHADE": "Schade", "Saige Wudtke + Jordan Fast (6/27/26) - SCHADE": "Schade", "Shelby Dockter + Carter Pederson (9/20/25) SCHADE": "2 Carat", "Sydney Trio + Jake Paulsen (5/23/26) - SCHADE": "1 Carat", "Tatum Luce + Noah Kleinsasser (10/3/26) - SCHADE": "Schade", "Taylor Martens + Dawson Rogge (8/22/2025) - SCHADE": "Schade", "Whitney Schnose + Alex Tammen (8/1/25) - SCHADE": "Schade", "Zoey Schentzel + John Petersen (9/12/25) - SCHADE": "Schade", "Abby Morse + Bruce Van De Stroet (6/27/26)--Hitch": "3 Carat", "Abby Vetch + Dawson Simon (9-6-25)_HITCH": "2 Carat", "Addison Hirschman + Mason McCormick (4/18/26) - HITCH": "2 Carat", "Alaina Berger + Sterling Rasch (9/19/26) - HITCH": "Diamond", "Alexis McGuire Wedding_8-22-26_(HITCH)": "1 Carat", "Alicia Garrow + Ryan Barker (6/6/26)_Hitch": "Diamond", "Anna Brutty + Andrew Foreman_9-5-26_HITCH": "2 Carat", "Bailey Pitz + Sam Palmer(8/8/26)HITCH": "1 Carat", "Brianne Ihnen + Alex Kock Wedding_(12-05-26)_HITCH": "1 Carat", "Cali Christianson + Cade Sorensen (8/2) - HITCH": "2 Carat", "Claire Olsen + Andrew Oeltjenbruns_12/12/26_(HITCH)": "2 Carat", "Cortney Pauling + Brandon Rodeberg (6-21-25)_HITCH": "2 Carat", "Dannika Weelborg + Bo Evans_(6-13-25)_HITCH": "2 Carat", "Emily Bruns + Johnn Cressman_9-6-25_(HITCH)": "3 Carat", "Emily Burkley + Jacob Knopf (1/2/26) - HITCH": "3 Carat", "Emma Hardin + Matthew Girard (7/25/26) - HITCH": "2 Carat", "Galle Waletich + Trevor Weddle_08-01-26_(HITCH)": "1 Carat", "Grace Drietz Wedding_1-3-26_(HITCH)": "Diamond", "Grace Parry+Cody Aughenbaugh (HITCH)": "2 Carat", "Haleigh Brown + Landon Wedding (8-8-25)_HITCH": "1 Carat", "Hannah Muth + Austin Kerr (9-19-25)_HITCH": "3 Carat", "Hayley Geyer + Zach Shoun_Wedding_(7-25-26)_HITCH": "2 Carat", "Jessica Welu + Luke Fawcett (6/13/2025) HITCH": "2 Carat", "Jianna Gellhaus + Matt Bartholomew_8-16-25 (HITCH)": "1 Carat", "Kadie Ketchum + Dylan Wacek_(11-15-25)_HITCH": "2 Carat", "Karley Konkol + Joshua Aho (8/22/26) - HITCH": "2 Carat", "Kasey Pistulka Wedding (6-27-26)_HITCH": "3 Carat", "Kasey Teigen + Ross Johnson (7/26/25) - HITCH": "1 Carat", "Kassidy Louwagie + Jaden Anderberg (8/16/25) - HITCH": "2 Carat", "Katelyn Halverson + Brent Snaza(10-3-26)_HITCH": "1 Carat", "Katelyn Rush_06-20-25_(HITCH)": "3 Carat", "Katie Schmit + Nick Snedeker_8-16-25_HITCH": "3 Carat", "Kayelee Johnson + Mike Gross (8/9/25) - HITCH": "3 Carat", "Kelli Wenande + Kirk Gilbertson_5-31-25_(HITCH)": "2 Carat", "Kylie Carpenter + Riley Haug_6-27-26_(HITCH)": "2 Carat", "Lauren Week + Owen Perry_7-5-25 (HITCH)": "2 Carat", "Lisa Hager + Jeremy Paulsen (7/10/26) - HITCH": "2 Carat", "Lisa Jaspers + Evan Nolte (7-25-25)_HITCH": "3 Carat", "Macy Halverson + Cale Wagner (9-5-26)_Hitch": "Diamond", "Mady Rathjen (6/7/25) - HITCH": "1 Carat", "Mariah McKibben + Carter Lane (10-10-26) HITCH": "3 Carat", "Morgan DeLange + Jacob Gerber (6/7/25)_HITCH": "3 Carat", "Morgan Schneider + Peyton Nash (7-19-25)_HITCH": "3 Carat", "Nicole Bye + Isaac Kruse (8-2-25)_HITCH": "2 Carat", "Payton DeLange + Jacob Hoffman(9/5/26)_HITCH": "2 Carat", "Rianna Fillipi + Augustin (5-16-25) HITCH": "3 Carat", "Shelby Dockter + Carter Pederson (9/20/25) HITCH": "2 Carat", "Sydney Carda + Dan Rossman (7-19-25)_HITCH": "1 Carat", "Sydney Trio + Jake Paulsen_05-23-26_(HITCH)": "1 Carat", "Abigail Lenssen + Jordan Jorgenson (7/11/26)_Hitch": "3 Carat", "Brenna Herting + Kade Russell_6/12/27_(HITCH)": "2 Carat", "Carissa Cunningham + Nick Kessler Wedding_8-28-26_(HITCH)": "2 Carat", "Carissa Doran Wedding_8-14-27_(HITCH)": "2 Carat", "Elizabeth Olsen + Cody Larson": "1 Carat", "Gretta Beinhorn_8-23-25_(HITCH)": "Diamond", "Jocelyn Nilson + Will Nester_7-23-27_HITCH": "2 Carat", "Kali Skogstad + Dylan Park (9/6/25) - HITCH": "2 Carat", "Katie Beck + Logan Grossinger Wedding_7-3-27_(HITCH)": "1 Carat", "Katy+Kylie Jaqua_(9-20-25)_HITCH": "3 Carat", "Keelie VanHee + Kyle Lechner (9-6-25)_HITCH": "2 Carat", "Lauren Taylor + Cody Shepardson_05-01-27_(Hitch)": "2 Carat", "Mackenzie Ginithen + Amanda Cheeseman_9-20-25_(HITCH)": "1 Carat", "Maddie Breidenbach + Cody Comeau Wedding (4/11/26)": "2 Carat", "Mitzi Cifuentes + Evan Mastel (8-9-25)_HITCH": "3 Carat", "Samantha Kaderabek + Isaac Lien Wedding_5-31-25_HITCH": "3 Carat", "Sara Schellpeper + Matt Fragodt (8/7/27) - HITCH": "2 Carat"};
 const CAT_COLORS = {"Admin": "#64748b", "Rentals": "#0ea5e9", "Diamond": "#e2e8f0", "1 Carat": "#a78bfa", "2 Carat": "#818cf8", "3 Carat": "#6366f1", "Other": "#94a3b8", "Schade": "#f472b6", "Events": "#fb923c", "Design": "#34d9a5", "Marketing": "#facc15", "Balloons": "#f87171", "Officiating": "#a3e635", "Holiday Hours/PTO": "#38bdf8"};
 
-// ============ SUPABASE API ============
 async function sbFetch(path, options={}) {
   const url = `${SB_URL}/rest/v1/${path}`;
   const method = options.method || 'GET';
-  const headers = {
-    'apikey': SB_KEY,
-    'Authorization': `Bearer ${SB_KEY}`,
-  };
-  // Only add Content-Type for requests with a body
+  const headers = { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` };
   if (method !== 'GET' && method !== 'DELETE') {
     headers['Content-Type'] = 'application/json';
     headers['Prefer'] = options.prefer || 'return=representation';
   }
   const res = await fetch(url, { ...options, method, headers });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`${res.status} ${path}: ${err}`);
-  }
+  if (!res.ok) { const err = await res.text(); throw new Error(`${res.status} ${path}: ${err}`); }
   const text = await res.text();
   return text ? JSON.parse(text) : [];
 }
@@ -415,183 +455,98 @@ async function sbFetch(path, options={}) {
 const sb = {
   get: (table, params='') => sbFetch(`${table}?${params}`),
   post: (table, body) => sbFetch(table, {method:'POST', body:JSON.stringify(body)}),
-  patch: (table, params, body) => sbFetch(`${table}?${params}`, {method:'PATCH', body:JSON.stringify(body), prefer:'return=representation'}),
+  patch: (table, params, body) => sbFetch(`${table}?${params}`, {method:'PATCH', body:JSON.stringify(body)}),
   delete: (table, params) => sbFetch(`${table}?${params}`, {method:'DELETE', prefer:'return=minimal'}),
-  upsert: (table, body) => sbFetch(table, {method:'POST', body:JSON.stringify(body), prefer:'resolution=merge-duplicates,return=representation', headers:{'Prefer':'resolution=merge-duplicates,return=representation'}}),
+  upsert: (table, body) => sbFetch(table, {method:'POST', body:JSON.stringify(body), prefer:'resolution=merge-duplicates,return=representation'}),
 };
 
-// ============ LOCAL STATE ============
 let state = {
-  employees: [],    // {id, name}
-  categories: [],   // {id, name, color, sort_order}
-  projects: [],     // {id, name, category_id, hourly_rate, budget}
-  entries: [],      // {id, employee_id, project_id, date, start_ts, end_ts, hours, notes, billable, imported}
-  mileage: [],
-  settings: {},
-  empMap: {},      // id -> name
-  empNameMap: {},  // name -> id
-  projMap: {},     // id -> name
-  projNameMap: {}, // name -> id
-  catMap: {},      // id -> {name, color}
-  catNameMap: {},  // name -> id
+  employees:[], categories:[], projects:[], entries:[], mileage:[], settings:{},
+  empMap:{}, empNameMap:{}, projMap:{}, projNameMap:{}, catMap:{}, catNameMap:{},
 };
 
 function rebuildMaps() {
-  state.empMap = {};
-  state.empNameMap = {};
-  state.employees.forEach(e => { state.empMap[e.id] = e.name; state.empNameMap[e.name] = e.id; });
-  state.projMap = {};
-  state.projNameMap = {};
-  state.projects.forEach(p => { state.projMap[p.id] = p.name; state.projNameMap[p.name] = p.id; });
-  state.catMap = {};
-  state.catNameMap = {};
-  state.categories.forEach(c => { state.catMap[c.id] = c; state.catNameMap[c.name] = c.id; });
+  state.empMap={}; state.empNameMap={};
+  state.employees.forEach(e=>{ state.empMap[e.id]=e.name; state.empNameMap[e.name]=e.id; });
+  state.projMap={}; state.projNameMap={};
+  state.projects.forEach(p=>{ state.projMap[p.id]=p.name; state.projNameMap[p.name]=p.id; });
+  state.catMap={}; state.catNameMap={};
+  state.categories.forEach(c=>{ state.catMap[c.id]=c; state.catNameMap[c.name]=c.id; });
 }
-
-function empName(id) { return state.empMap[id] || '?'; }
-function projName(id) { return state.projMap[id] || '?'; }
-function projCat(projId) {
-  const proj = state.projects.find(p => p.id === projId);
-  if (!proj || !proj.category_id) return null;
-  return state.catMap[proj.category_id] || null;
-}
-function projCatByName(name) {
-  const proj = state.projects.find(p => p.name === name);
-  if (!proj || !proj.category_id) return null;
-  return state.catMap[proj.category_id] || null;
-}
-function safeStr(s) { return (s||"").replace(/'/g, "\'"); }
-function catBadge(cat) {
-  if (!cat) return '<span style="font-size:.7rem;color:var(--text3)">—</span>';
-  const c = cat.color || CAT_COLORS[cat.name] || '#64748b';
+function empName(id){ return state.empMap[id]||'?'; }
+function projName(id){ return state.projMap[id]||'?'; }
+function projCat(projId){ const p=state.projects.find(x=>x.id===projId); if(!p||!p.category_id)return null; return state.catMap[p.category_id]||null; }
+function safeStr(s){ return (s||'').replace(/'/g,"&apos;"); }
+function catBadge(cat){
+  if(!cat)return '<span style="font-size:.7rem;color:var(--text3)">—</span>';
+  const c=cat.color||CAT_COLORS[cat.name]||'#64748b';
   return `<span style="background:${c}22;color:${c};border:1px solid ${c}44;padding:1px 7px;border-radius:10px;font-size:.72rem;font-weight:600;white-space:nowrap">${cat.name}</span>`;
 }
 
-// ============ INIT ============
 async function init() {
-  setSyncStatus('loading','Connecting...');
+  setSyncStatus('loading','&#9679; Connecting...');
   try {
-    setLoadingMsg('Connecting to database...');
-    await loadAll();
-    setLoadingMsg('Checking import status...');
-    const imported = state.settings['imported_clockify'];
-    if (!imported && IMPORT_DATA.length > 0) {
-      await importClockifyData();
-      await loadAll();
-    }
+    setLoadingMsg('Step 1 of 4: Loading employees...');
+    state.employees = await sb.get('employees','order=name');
+    setLoadingMsg('Step 2 of 4: Loading categories...');
+    state.categories = await sb.get('categories','order=sort_order');
+    setLoadingMsg('Step 3 of 4: Loading projects...');
+    state.projects = await sb.get('projects','order=name');
+    setLoadingMsg('Step 4 of 4: Loading settings...');
+    const settings = await sb.get('settings','');
+    state.settings={};
+    settings.forEach(s=>state.settings[s.key]=s.value);
+    rebuildMaps();
+    // Apply seed categories to any projects missing them
+    await applySeedCategories();
     hideLoading();
     setSyncStatus('ok','&#9679; Live');
     renderNameGrid();
     checkAutoBackup();
   } catch(e) {
-    console.error('Init error:', e);
-    const overlay = document.getElementById('loadingOverlay');
-    overlay.style.background = 'rgba(15,17,23,.97)';
-    document.getElementById('loadingMsg').textContent = 'ERROR: ' + e.message;
-    document.getElementById('loadingMsg').style.color = '#f7794f';
-    document.getElementById('loadingMsg').style.fontSize = '1rem';
-    document.getElementById('loadingMsg').style.maxWidth = '600px';
-    document.getElementById('loadingMsg').style.wordBreak = 'break-all';
-    const detail = document.createElement('div');
-    detail.style.cssText = 'color:#8b90b0;font-size:.8rem;margin-top:8px;max-width:600px;word-break:break-all;text-align:center;padding:0 20px';
-    detail.textContent = 'Stack: ' + (e.stack||'').slice(0,200);
-    overlay.appendChild(detail);
+    const overlay=document.getElementById('loadingOverlay');
+    document.getElementById('loadingMsg').textContent='Error: '+e.message;
+    document.getElementById('loadingMsg').style.color='var(--warn)';
     setSyncStatus('err','&#9679; Error');
-    const retry = document.createElement('button');
-    retry.className = 'btn btn-primary';
-    retry.textContent = 'Retry';
-    retry.style.marginTop = '16px';
-    retry.onclick = () => { detail.remove(); retry.remove(); init(); };
-    overlay.appendChild(retry);
+    const btn=document.createElement('button');
+    btn.className='btn btn-primary';btn.textContent='Retry';btn.style.marginTop='16px';
+    btn.onclick=()=>{btn.remove();init();};
+    overlay.appendChild(btn);
   }
 }
 
-async function loadAll() {
-  setLoadingMsg('Step 1 of 4: Loading employees...');
-  state.employees = await sb.get('employees','order=name');
-  setLoadingMsg('Step 2 of 4: Loading categories... ✓ ' + state.employees.length + ' employees');
-  state.categories = await sb.get('categories','order=sort_order');
-  setLoadingMsg('Step 3 of 4: Loading projects... ✓ ' + state.categories.length + ' categories');
-  state.projects = await sb.get('projects','order=name');
-  setLoadingMsg('Step 4 of 4: Loading settings... ✓ ' + state.projects.length + ' projects');
-  const settings = await sb.get('settings','');
-  state.settings = {};
-  settings.forEach(s => state.settings[s.key] = s.value);
-  rebuildMaps();
-}
-
-async function loadEntries(fromDate, toDate) {
-  let params = `order=start_ts.desc`;
-  if (fromDate) params += `&date=gte.${fromDate}`;
-  if (toDate) params += `&date=lte.${toDate}`;
-  params += '&limit=5000';
-  state.entries = await sb.get('time_entries', params);
+async function applySeedCategories() {
+  // For any project that has no category_id but has one in our seed, update it
+  const updates = [];
+  for (const proj of state.projects) {
+    if (!proj.category_id && SEED_PROJ_CATS[proj.name]) {
+      const catName = SEED_PROJ_CATS[proj.name];
+      const catId = state.catNameMap[catName];
+      if (catId) {
+        updates.push({ id: proj.id, catId });
+        proj.category_id = catId;
+      }
+    }
+  }
+  // Batch update in Supabase (fire and forget, no need to await each)
+  for (const u of updates) {
+    sb.patch('projects', `id=eq.${u.id}`, {category_id: u.catId}).catch(()=>{});
+  }
 }
 
 async function loadAllEntries() {
-  let all = [], offset = 0, limit = 1000;
-  setLoadingMsg('Loading your historical entries...');
+  let all=[], offset=0, limit=1000;
   while(true) {
-    const batch = await sb.get('time_entries', `order=start_ts.desc&limit=${limit}&offset=${offset}`);
+    const batch = await sb.get('time_entries',`order=start_ts.desc&limit=${limit}&offset=${offset}`);
     all = all.concat(batch);
-    if (batch.length < limit) break;
+    if(batch.length < limit) break;
     offset += limit;
   }
   state.entries = all;
 }
 
-// ============ IMPORT CLOCKIFY DATA ============
-async function importClockifyData() {
-  const data = IMPORT_DATA;
-  setLoadingMsg('Importing your Clockify history...');
-  document.getElementById('importProgressWrap').style.display = 'block';
-
-  // Insert employees and projects first (already done via SQL, but sync state)
-  await loadAll();
-
-  // Batch insert entries
-  const BATCH = 200;
-  let done = 0;
-  const total = data.length;
-
-  for (let i = 0; i < data.length; i += BATCH) {
-    const chunk = data.slice(i, i + BATCH);
-    const rows = chunk.map(e => {
-      const empId = state.empNameMap[e.emp];
-      const projId = state.projNameMap[e.proj];
-      if (!empId || !projId) return null;
-      return {
-        employee_id: empId,
-        project_id: projId,
-        date: e.date,
-        start_ts: e.start ? new Date(e.start).toISOString() : null,
-        end_ts: e.end ? new Date(e.end).toISOString() : null,
-        hours: e.hours,
-        notes: e.notes || '',
-        billable: e.billable,
-        imported: true
-      };
-    }).filter(Boolean);
-
-    if (rows.length > 0) {
-      await sb.post('time_entries', rows);
-    }
-
-    done += chunk.length;
-    const pct = Math.round((done/total)*100);
-    document.getElementById('importFill').style.width = pct + '%';
-    document.getElementById('importDetail').textContent = `${done.toLocaleString()} of ${total.toLocaleString()} entries (${pct}%)`;
-  }
-
-  // Mark as imported
-  await sb.upsert('settings', {key:'imported_clockify', value:'true'});
-  setLoadingMsg('Import complete!');
-  await new Promise(r => setTimeout(r, 800));
-}
-
-// ============ PAY PERIODS ============
-function getPeriodStart() { return state.settings['period_start'] || new Date().toISOString().slice(0,10); }
-function getPeriods(count=30) {
+function getPeriodStart(){ return state.settings['period_start']||new Date().toISOString().slice(0,10); }
+function getPeriods(count=30){
   const anchor=new Date(getPeriodStart()+'T00:00:00'),today=new Date();
   let start=new Date(anchor);
   while(true){const next=new Date(start);next.setDate(next.getDate()+14);if(next>today)break;start=next;}
@@ -607,79 +562,57 @@ const msToHours=ms=>(ms/3600000).toFixed(2);
 const hhmm=ms=>{const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;}
 let activePeriodIdx=null;
 
-// ============ PROJECT PICKER ============
-let timerCatFilter='', manCatFilter='', timerProjSelected=null, manProjSelected=null;
+// PROJECT PICKER
+let timerCatFilter='',manCatFilter='',timerProjSelected=null,manProjSelected=null;
 
-function renderCatChips(wrapperId, activeFilter, setFn) {
-  const wrap = document.getElementById(wrapperId);
-  if (!wrap) return;
-  const allActive = !activeFilter;
-  let html = `<span class="cat-chip" style="background:${allActive?'var(--accent)':'var(--surface2)'};color:${allActive?'#fff':'var(--text2)'};border-color:${allActive?'var(--accent)':'var(--border)'}" onclick="${setFn}('')">All</span>`;
-  state.categories.forEach(cat => {
-    const c = cat.color || '#64748b';
-    const isActive = activeFilter === cat.name;
-    html += `<span class="cat-chip" style="background:${isActive?c:c+'22'};color:${isActive?'#fff':c};border-color:${c}55" onclick="${setFn}('${cat.name.replace(/'/g,"\'")}')">  ${cat.name}</span>`;
+function renderCatChips(wrapperId,activeFilter,setFn){
+  const wrap=document.getElementById(wrapperId); if(!wrap)return;
+  const allActive=!activeFilter;
+  let html=`<span class="cat-chip" style="background:${allActive?'var(--accent)':'var(--surface2)'};color:${allActive?'#fff':'var(--text2)'};border-color:${allActive?'var(--accent)':'var(--border)'}" onclick="${setFn}('')">All</span>`;
+  state.categories.forEach(cat=>{
+    const c=cat.color||'#64748b',isActive=activeFilter===cat.name;
+    html+=`<span class="cat-chip" style="background:${isActive?c:c+'22'};color:${isActive?'#fff':c};border-color:${c}55" onclick="${setFn}('${cat.name.replace(/'/g,"&apos;")}')">  ${cat.name}</span>`;
   });
-  const untagActive = activeFilter === '__untagged__';
-  html += `<span class="cat-chip" style="background:${untagActive?'var(--text2)':'var(--surface2)'};color:${untagActive?'#fff':'var(--text2)'};border-color:var(--border)" onclick="${setFn}('__untagged__')">Untagged</span>`;
-  wrap.innerHTML = html;
+  const untagActive=activeFilter==='__untagged__';
+  html+=`<span class="cat-chip" style="background:${untagActive?'#555':'var(--surface2)'};color:${untagActive?'#fff':'var(--text2)'};border-color:var(--border)" onclick="${setFn}('__untagged__')">Untagged</span>`;
+  wrap.innerHTML=html;
 }
-
-function setTimerCat(cat) { timerCatFilter=cat; renderCatChips('timerCatChips',timerCatFilter,'setTimerCat'); renderTimerProjList(); }
-function setManCat(cat) { manCatFilter=cat; renderCatChips('manCatChips',manCatFilter,'setManCat'); renderManProjList(); }
-
-function filteredProjects(catFilter, searchVal) {
-  let projs = state.projects;
-  if (catFilter === '__untagged__') projs = projs.filter(p => !p.category_id);
-  else if (catFilter) {
-    const catId = state.catNameMap[catFilter];
-    projs = projs.filter(p => p.category_id === catId);
-  }
-  if (searchVal) { const q=searchVal.toLowerCase(); projs=projs.filter(p=>p.name.toLowerCase().includes(q)); }
+function setTimerCat(cat){timerCatFilter=cat;renderCatChips('timerCatChips',timerCatFilter,'setTimerCat');renderTimerProjList();}
+function setManCat(cat){manCatFilter=cat;renderCatChips('manCatChips',manCatFilter,'setManCat');renderManProjList();}
+function filteredProjects(catFilter,searchVal){
+  let projs=state.projects;
+  if(catFilter==='__untagged__')projs=projs.filter(p=>!p.category_id);
+  else if(catFilter){const catId=state.catNameMap[catFilter];projs=projs.filter(p=>p.category_id===catId);}
+  if(searchVal){const q=searchVal.toLowerCase();projs=projs.filter(p=>p.name.toLowerCase().includes(q));}
   return projs;
 }
-
-function renderTimerProjList() {
+function renderTimerProjList(){
   const search=document.getElementById('timerProjSearch')?.value||'';
   const projs=filteredProjects(timerCatFilter,search);
-  const wrap=document.getElementById('timerProjList');
-  if(!wrap) return;
+  const wrap=document.getElementById('timerProjList'); if(!wrap)return;
   if(!projs.length){wrap.innerHTML='<div class="empty-state" style="padding:14px">No projects match.</div>';return;}
   wrap.innerHTML=projs.map(p=>{
     const cat=p.category_id?state.catMap[p.category_id]:null;
-    return `<div class="proj-item ${timerProjSelected===p.id?'selected':''}" onclick="selectTimerProj(${p.id},'${safeStr(p.name)}')">  <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name}</span><span>${catBadge(cat)}</span></div>`;
+    return `<div class="proj-item ${timerProjSelected===p.id?'selected':''}" onclick="selectTimerProj(${p.id},'${safeStr(p.name)}')">${p.name}<span>${catBadge(cat)}</span></div>`;
   }).join('');
 }
-
-function renderManProjList() {
+function renderManProjList(){
   const search=document.getElementById('manProjSearch')?.value||'';
   const projs=filteredProjects(manCatFilter,search);
-  const wrap=document.getElementById('manProjList');
-  if(!wrap) return;
+  const wrap=document.getElementById('manProjList'); if(!wrap)return;
   if(!projs.length){wrap.innerHTML='<div class="empty-state" style="padding:14px">No projects match.</div>';return;}
   wrap.innerHTML=projs.map(p=>{
     const cat=p.category_id?state.catMap[p.category_id]:null;
-    return `<div class="proj-item ${manProjSelected===p.id?'selected':''}" onclick="selectManProj(${p.id},'${safeStr(p.name)}')"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name}</span><span>${catBadge(cat)}</span></div>`;
+    return `<div class="proj-item ${manProjSelected===p.id?'selected':''}" onclick="selectManProj(${p.id},'${safeStr(p.name)}')">${p.name}<span>${catBadge(cat)}</span></div>`;
   }).join('');
 }
+function selectTimerProj(id,name){timerProjSelected=id;document.getElementById('timerProject').value=id;document.getElementById('timerSelLabel').textContent='✓ '+name;renderTimerProjList();}
+function selectManProj(id,name){manProjSelected=id;document.getElementById('manProject').value=id;document.getElementById('manSelLabel').textContent='✓ '+name;renderManProjList();}
 
-function selectTimerProj(id,name) {
-  timerProjSelected=id;
-  document.getElementById('timerProject').value=id;
-  document.getElementById('timerSelLabel').textContent='✓ '+name;
-  renderTimerProjList();
-}
-function selectManProj(id,name) {
-  manProjSelected=id;
-  document.getElementById('manProject').value=id;
-  document.getElementById('manSelLabel').textContent='✓ '+name;
-  renderManProjList();
-}
+// EMPLOYEE VIEW
+let selectedEmployee=null,selectedEmpId=null,clockInTime=null,timerInterval=null,activeEntry=null;
 
-// ============ EMPLOYEE VIEW ============
-let selectedEmployee=null, selectedEmpId=null, clockInTime=null, timerInterval=null, activeEntry=null;
-
-function renderNameGrid() {
+function renderNameGrid(){
   const g=document.getElementById('nameGrid');
   const q=(document.getElementById('empSearch')?.value||'').toLowerCase();
   const filtered=state.employees.filter(e=>e.name.toLowerCase().includes(q));
@@ -689,120 +622,88 @@ function renderNameGrid() {
     div.className='name-btn';
     const clocked=state.entries.find(e=>e.employee_id===emp.id&&!e.end_ts);
     div.innerHTML=clocked?`<span class="dot dot-green"></span>${emp.name}`:emp.name;
-    if(clocked) div.classList.add('clocked-in');
-    if(emp.id===selectedEmpId) div.classList.add('selected');
-    div.onclick=()=>{
-      document.querySelectorAll('.name-btn').forEach(b=>b.classList.remove('selected'));
-      div.classList.add('selected');
-      selectedEmployee=emp.name; selectedEmpId=emp.id;
-      document.getElementById('confirmEmpBtn').disabled=false;
-    };
+    if(clocked)div.classList.add('clocked-in');
+    if(emp.id===selectedEmpId)div.classList.add('selected');
+    div.onclick=()=>{document.querySelectorAll('.name-btn').forEach(b=>b.classList.remove('selected'));div.classList.add('selected');selectedEmployee=emp.name;selectedEmpId=emp.id;document.getElementById('confirmEmpBtn').disabled=false;};
     g.appendChild(div);
   });
 }
 
-async function confirmEmployee() {
-  if(!selectedEmpId) return;
+async function confirmEmployee(){
+  if(!selectedEmpId)return;
   document.getElementById('step-select').style.display='none';
   document.getElementById('step-entry').style.display='block';
   document.getElementById('empGreeting').textContent=`Hello, ${selectedEmployee.split(' ')[0]}!`;
-  document.getElementById('manDate').value=todayStr();
-  document.getElementById('mileDate').value=todayStr();
-  timerCatFilter=''; manCatFilter=''; timerProjSelected=null; manProjSelected=null;
+  const today=todayStr();
+  document.getElementById('manDate').value=today;
+  document.getElementById('mileDate').value=today;
+  // Set default date range to current pay period
+  const cp=getPeriods()[currentPeriodIdx()];
+  document.getElementById('empFromDate').value=cp.start.toISOString().slice(0,10);
+  document.getElementById('empToDate').value=cp.end.toISOString().slice(0,10);
+  timerCatFilter='';manCatFilter='';timerProjSelected=null;manProjSelected=null;
   renderCatChips('timerCatChips',timerCatFilter,'setTimerCat');
   renderCatChips('manCatChips',manCatFilter,'setManCat');
-  renderTimerProjList(); renderManProjList();
-  // Load recent entries for this employee
-  const cp=getPeriods()[currentPeriodIdx()];
-  await loadPeriodEntries(cp);
-  checkExistingClockin();
-  renderEmpEntries();
+  renderTimerProjList();renderManProjList();
+  // Load entries for this employee
+  const entries=await sb.get('time_entries',`employee_id=eq.${selectedEmpId}&order=start_ts.desc&limit=500`);
+  const ids=new Set(entries.map(e=>e.id));
+  state.entries=state.entries.filter(e=>!ids.has(e.id)).concat(entries);
+  checkExistingClockin();renderEmpEntries();
 }
-
-async function loadPeriodEntries(cp) {
-  const ps=cp.start.toISOString().slice(0,10), pe=cp.end.toISOString().slice(0,10);
-  const entries = await sb.get('time_entries', `date=gte.${ps}&date=lte.${pe}&order=start_ts.desc&limit=2000`);
-  // Merge into state without duplicating
-  const ids = new Set(entries.map(e=>e.id));
-  state.entries = state.entries.filter(e=>!ids.has(e.id)).concat(entries);
-}
-
-function backToSelect() {
-  if(activeEntry){alert('Please clock out before switching.');return;}
-  selectedEmployee=null; selectedEmpId=null;
+function backToSelect(){
+  if(activeEntry){alert('Please clock out first.');return;}
+  selectedEmployee=null;selectedEmpId=null;
   document.getElementById('step-select').style.display='block';
   document.getElementById('step-entry').style.display='none';
-  renderNameGrid();
-  document.getElementById('confirmEmpBtn').disabled=true;
+  renderNameGrid();document.getElementById('confirmEmpBtn').disabled=true;
 }
-
-function checkExistingClockin() {
+function checkExistingClockin(){
   activeEntry=state.entries.find(e=>e.employee_id===selectedEmpId&&!e.end_ts)||null;
-  if(activeEntry) {
-    clockInTime=new Date(activeEntry.start_ts).getTime(); startTimer();
-    document.getElementById('clockInBtn').disabled=true;
-    document.getElementById('clockOutBtn').disabled=false;
-    timerProjSelected=activeEntry.project_id;
-    document.getElementById('timerProject').value=activeEntry.project_id;
-    const pn=projName(activeEntry.project_id);
-    document.getElementById('timerSelLabel').textContent='✓ '+pn;
+  if(activeEntry){
+    clockInTime=new Date(activeEntry.start_ts).getTime();startTimer();
+    document.getElementById('clockInBtn').disabled=true;document.getElementById('clockOutBtn').disabled=false;
+    timerProjSelected=activeEntry.project_id;document.getElementById('timerProject').value=activeEntry.project_id;
+    const pn=projName(activeEntry.project_id);document.getElementById('timerSelLabel').textContent='✓ '+pn;
     document.getElementById('timerStatus').textContent=`Clocked in at ${fmtTime(activeEntry.start_ts)} · ${pn}`;
     renderTimerProjList();
-  } else {
-    document.getElementById('clockInBtn').disabled=false;
-    document.getElementById('clockOutBtn').disabled=true;
+  }else{
+    document.getElementById('clockInBtn').disabled=false;document.getElementById('clockOutBtn').disabled=true;
     document.getElementById('timerStatus').textContent='Not clocked in';
   }
   const cp=getPeriods()[currentPeriodIdx()];
   document.getElementById('empPeriodBadge').textContent=periodLabel(cp);
   document.getElementById('empSubtitle').textContent=`Pay period: ${periodLabel(cp)}`;
 }
-
-async function clockIn() {
+async function clockIn(){
   const projId=parseInt(document.getElementById('timerProject').value);
   if(!projId){toast('Please select a project first.');return;}
   const notes=document.getElementById('timerNotes').value;
   const now=new Date().toISOString();
-  try {
-    const [entry]=await sb.post('time_entries',[{
-      employee_id:selectedEmpId, project_id:projId,
-      date:todayStr(), start_ts:now, end_ts:null,
-      hours:0, notes, billable:true
-    }]);
-    activeEntry=entry;
-    state.entries.push(entry);
-    clockInTime=Date.now(); startTimer();
-    document.getElementById('clockInBtn').disabled=true;
-    document.getElementById('clockOutBtn').disabled=false;
+  try{
+    const [entry]=await sb.post('time_entries',[{employee_id:selectedEmpId,project_id:projId,date:todayStr(),start_ts:now,end_ts:null,hours:0,notes,billable:true}]);
+    activeEntry=entry;state.entries.push(entry);
+    clockInTime=Date.now();startTimer();
+    document.getElementById('clockInBtn').disabled=true;document.getElementById('clockOutBtn').disabled=false;
     document.getElementById('timerStatus').textContent=`Clocked in at ${fmtTime(now)} · ${projName(projId)}`;
-    setSyncStatus('ok','&#9679; Live');
-    toast('Clocked in!');
-  } catch(e) { setSyncStatus('err','&#9679; Error'); toast('Error saving — check connection.'); }
+    setSyncStatus('ok','&#9679; Live');toast('Clocked in!');
+  }catch(e){setSyncStatus('err','&#9679; Error');toast('Error: '+e.message);}
 }
-
-async function clockOut() {
-  if(!activeEntry) return;
+async function clockOut(){
+  if(!activeEntry)return;
   const now=new Date().toISOString();
   const hours=parseFloat(msToHours(Date.now()-clockInTime));
-  try {
+  try{
     await sb.patch('time_entries',`id=eq.${activeEntry.id}`,{end_ts:now,hours});
-    activeEntry.end_ts=now; activeEntry.hours=hours;
-    stopTimer();
-    document.getElementById('clockInBtn').disabled=false;
-    document.getElementById('clockOutBtn').disabled=true;
-    document.getElementById('timerStatus').textContent='Not clocked in';
-    document.getElementById('timerNotes').value='';
-    activeEntry=null;
-    renderEmpEntries();
-    setSyncStatus('ok','&#9679; Live');
-    toast('Clocked out — saved!');
-  } catch(e) { setSyncStatus('err','&#9679; Error'); toast('Error saving — check connection.'); }
+    activeEntry.end_ts=now;activeEntry.hours=hours;stopTimer();
+    document.getElementById('clockInBtn').disabled=false;document.getElementById('clockOutBtn').disabled=true;
+    document.getElementById('timerStatus').textContent='Not clocked in';document.getElementById('timerNotes').value='';
+    activeEntry=null;renderEmpEntries();setSyncStatus('ok','&#9679; Live');toast('Clocked out — saved!');
+  }catch(e){setSyncStatus('err','&#9679; Error');toast('Error: '+e.message);}
 }
-
 function startTimer(){clearInterval(timerInterval);timerInterval=setInterval(()=>{document.getElementById('timerDisplay').textContent=hhmm(Date.now()-clockInTime);},1000);}
 function stopTimer(){clearInterval(timerInterval);timerInterval=null;document.getElementById('timerDisplay').textContent='00:00:00';}
-
-async function addManualEntry() {
+async function addManualEntry(){
   const date=document.getElementById('manDate').value,start=document.getElementById('manStart').value,end=document.getElementById('manEnd').value;
   const projId=parseInt(document.getElementById('manProject').value),notes=document.getElementById('manNotes').value;
   if(!date||!start||!end){toast('Please fill in date, start, and end time.');return;}
@@ -810,130 +711,153 @@ async function addManualEntry() {
   const sMs=new Date(`${date}T${start}`),eMs=new Date(`${date}T${end}`);
   if(eMs<=sMs){toast('End time must be after start time.');return;}
   const hours=parseFloat(msToHours(eMs-sMs));
-  try {
-    const [entry]=await sb.post('time_entries',[{
-      employee_id:selectedEmpId,project_id:projId,date,
-      start_ts:sMs.toISOString(),end_ts:eMs.toISOString(),hours,notes,billable:true
-    }]);
+  try{
+    const [entry]=await sb.post('time_entries',[{employee_id:selectedEmpId,project_id:projId,date,start_ts:sMs.toISOString(),end_ts:eMs.toISOString(),hours,notes,billable:true}]);
     state.entries.push(entry);
     document.getElementById('manStart').value='';document.getElementById('manEnd').value='';document.getElementById('manNotes').value='';
     manProjSelected=null;document.getElementById('manProject').value='';document.getElementById('manSelLabel').textContent='';
-    renderManProjList();renderEmpEntries();
-    setSyncStatus('ok','&#9679; Live');
-    toast('Entry added!');
-  } catch(e) { setSyncStatus('err','&#9679; Error'); toast('Error saving.'); }
+    renderManProjList();renderEmpEntries();toast('Entry added!');
+  }catch(e){toast('Error: '+e.message);}
 }
-
-async function addMileage() {
+async function addMileage(){
   const date=document.getElementById('mileDate').value,miles=parseFloat(document.getElementById('mileAmount').value),purpose=document.getElementById('milePurpose').value;
   if(!date||!miles||miles<=0){toast('Please enter a date and miles.');return;}
-  try {
+  try{
     const [m]=await sb.post('mileage',[{employee_id:selectedEmpId,date,miles,purpose}]);
-    state.mileage.push(m);
-    document.getElementById('mileAmount').value='';document.getElementById('milePurpose').value='';
-    toast('Mileage logged!');
-  } catch(e) { toast('Error saving mileage.'); }
+    state.mileage.push(m);document.getElementById('mileAmount').value='';document.getElementById('milePurpose').value='';toast('Mileage logged!');
+  }catch(e){toast('Error: '+e.message);}
 }
-
-function renderEmpEntries() {
-  const cp=getPeriods()[currentPeriodIdx()];
-  const ps=cp.start.toISOString().slice(0,10),pe=cp.end.toISOString().slice(0,10);
-  const entries=state.entries.filter(e=>e.employee_id===selectedEmpId&&e.end_ts&&e.date>=ps&&e.date<=pe).sort((a,b)=>new Date(b.start_ts)-new Date(a.start_ts));
+function renderEmpEntries(){
+  const from=document.getElementById('empFromDate')?.value||'';
+  const to=document.getElementById('empToDate')?.value||'';
+  let entries=state.entries.filter(e=>e.employee_id===selectedEmpId&&e.end_ts);
+  if(from)entries=entries.filter(e=>e.date>=from);
+  if(to)entries=entries.filter(e=>e.date<=to);
+  entries.sort((a,b)=>new Date(b.start_ts)-new Date(a.start_ts));
   const wrap=document.getElementById('empEntriesWrap');
-  if(!entries.length){wrap.innerHTML='<div class="empty-state">No completed entries this pay period.</div>';return;}
-  wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Date</th><th>In</th><th>Out</th><th>Project</th><th>Hours</th><th>Notes</th><th></th></tr></thead><tbody>${entries.map(e=>{
-    const cat=projCat(e.project_id);
-    return `<tr><td>${fmt(e.date)}</td><td>${fmtTime(e.start_ts)}</td><td>${fmtTime(e.end_ts)}</td><td><div style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.82rem">${projName(e.project_id)}</div>${catBadge(cat)}</td><td style="color:var(--accent2);font-family:monospace">${e.hours?.toFixed(2)||'—'}</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.notes||''}</td><td><button class="delete-btn" onclick="deleteEmpEntry(${e.id})">✕</button></td></tr>`;
-  }).join('')}</tbody></table></div>`;
+  if(!entries.length){wrap.innerHTML='<div class="empty-state">No entries for this date range.</div>';}
+  else wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Date</th><th>In</th><th>Out</th><th>Project</th><th>Hours</th><th>Notes</th><th></th></tr></thead><tbody>${entries.map(e=>{const cat=projCat(e.project_id);return `<tr><td>${fmt(e.date)}</td><td>${fmtTime(e.start_ts)}</td><td>${fmtTime(e.end_ts)}</td><td><div style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.82rem">${projName(e.project_id)}</div>${catBadge(cat)}</td><td style="color:var(--accent2);font-family:monospace">${e.hours?.toFixed(2)||'—'}</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.notes||''}</td><td><button class="delete-btn" onclick="deleteEmpEntry(${e.id})">✕</button></td></tr>`;}).join('')}</tbody></table></div>`;
   const totalH=entries.reduce((s,e)=>s+(e.hours||0),0);
-  const miles=state.mileage.filter(m=>m.employee_id===selectedEmpId&&m.date>=ps&&m.date<=pe);
+  const from2=document.getElementById('empFromDate')?.value||'';
+  const to2=document.getElementById('empToDate')?.value||'';
+  const miles=state.mileage.filter(m=>m.employee_id===selectedEmpId&&(!from2||m.date>=from2)&&(!to2||m.date<=to2));
   document.getElementById('empTotalHours').textContent=totalH.toFixed(1);
   document.getElementById('empTotalMiles').textContent=miles.reduce((s,m)=>s+m.miles,0).toFixed(1);
   document.getElementById('empDaysWorked').textContent=[...new Set(entries.map(e=>e.date))].length;
 }
+async function deleteEmpEntry(id){if(!confirm('Delete?'))return;await sb.delete('time_entries',`id=eq.${id}`);state.entries=state.entries.filter(e=>e.id!==id);renderEmpEntries();toast('Deleted.');}
 
-async function deleteEmpEntry(id) {
-  if(!confirm('Delete this entry?'))return;
-  await sb.delete('time_entries',`id=eq.${id}`);
-  state.entries=state.entries.filter(e=>e.id!==id);
-  renderEmpEntries(); toast('Deleted.');
-}
-
-// ============ MANAGER ============
+// MANAGER
 let mgrLoggedIn=false;
-function mgrLogin() {
-  if(document.getElementById('mgrPassword').value===state.settings['manager_password']) {
-    mgrLoggedIn=true;
-    document.getElementById('mgr-login').style.display='none';
-    document.getElementById('mgr-dashboard').style.display='block';
-    activePeriodIdx=currentPeriodIdx();
-    initMgrDashboard();
-  } else {
-    const e=document.getElementById('loginError');e.style.display='block';e.textContent='Incorrect password.';
-  }
+function mgrLogin(){
+  if(document.getElementById('mgrPassword').value===state.settings['manager_password']){
+    mgrLoggedIn=true;document.getElementById('mgr-login').style.display='none';document.getElementById('mgr-dashboard').style.display='block';
+    activePeriodIdx=currentPeriodIdx();initMgrDashboard();
+  }else{const e=document.getElementById('loginError');e.style.display='block';e.textContent='Incorrect password.';}
 }
 function mgrLogout(){mgrLoggedIn=false;document.getElementById('mgr-login').style.display='block';document.getElementById('mgr-dashboard').style.display='none';document.getElementById('mgrPassword').value='';}
 
-async function initMgrDashboard() {
+async function initMgrDashboard(){
+  setLoadingMsg('Loading all entries...');
+  document.getElementById('loadingOverlay').style.display='flex';
   await loadAllEntries();
   const mileage=await sb.get('mileage','order=date.desc&limit=5000');
   state.mileage=mileage;
-  renderOverview();
-  renderManageTab();
-  renderExportTab();
-  populateMgrFilters();
-  populateProfitYears();
+  hideLoading();
+  renderOverview();renderManageTab();renderExportTab();populateMgrFilters();populateProfitYears();
 }
 
-function mgrTab(name) {
-  ['overview','profitability','entries','mileage','manage','export'].forEach((n,i)=>{
+function mgrTab(name){
+  ['overview','analytics','profitability','entries','mileage','manage','export'].forEach((n,i)=>{
     document.querySelectorAll('.tab')[i].classList.toggle('active',n===name);
     document.getElementById('tab-'+n).style.display=n===name?'block':'none';
   });
-  if(name==='entries') renderAllEntries();
-  if(name==='mileage') renderMileage();
-  if(name==='export') renderExportPreview();
-  if(name==='profitability') { renderProfitability(); renderCategoryAverages(); populateAvgYears(); }
+  if(name==='entries')renderAllEntries();
+  if(name==='mileage')renderMileage();
+  if(name==='export')renderExportPreview();
+  if(name==='profitability')renderProfitability();
+  if(name==='analytics'){renderPieChart();renderEmpHours();renderCategoryAverages();populateAvgYears();}
 }
 
 function prevPeriod(){activePeriodIdx=Math.max(0,activePeriodIdx-1);renderOverview();}
 function nextPeriod(){activePeriodIdx=Math.min(getPeriods().length-1,activePeriodIdx+1);renderOverview();}
 
-function renderOverview() {
+function renderOverview(){
   const periods=getPeriods(),cp=periods[activePeriodIdx];
   document.getElementById('mgrPeriodBadge').textContent=periodLabel(cp);
   const ps=cp.start.toISOString().slice(0,10),pe=cp.end.toISOString().slice(0,10);
   const entries=state.entries.filter(e=>e.end_ts&&e.date>=ps&&e.date<=pe);
   const byEmp={};
-  entries.forEach(e=>{
-    const n=empName(e.employee_id);
-    if(!byEmp[n])byEmp[n]={hours:0,byProject:{}};
-    byEmp[n].hours+=e.hours||0;
-    const pn=projName(e.project_id);
-    byEmp[n].byProject[pn]=(byEmp[n].byProject[pn]||0)+(e.hours||0);
-  });
+  entries.forEach(e=>{const n=empName(e.employee_id);if(!byEmp[n])byEmp[n]={hours:0,byProject:{}};byEmp[n].hours+=e.hours||0;const pn=projName(e.project_id);byEmp[n].byProject[pn]=(byEmp[n].byProject[pn]||0)+(e.hours||0);});
   const wrap=document.getElementById('overviewTable');
   if(!Object.keys(byEmp).length){wrap.innerHTML='<div class="empty-state">No entries for this period.</div>';return;}
   const total=Object.values(byEmp).reduce((s,d)=>s+d.hours,0);
-  wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Total Hours</th><th>By Project</th></tr></thead><tbody>${Object.entries(byEmp).sort((a,b)=>a[0].localeCompare(b[0])).map(([emp,d])=>`<tr><td style="color:var(--text);font-weight:500">${emp}</td><td style="color:var(--accent2);font-family:monospace">${d.hours.toFixed(2)}</td><td style="font-size:.78rem">${Object.entries(d.byProject).map(([p,h])=>`<span class="badge badge-blue" style="margin:1px">${p.length>26?p.slice(0,26)+'…':p}: ${h.toFixed(1)}h</span>`).join(' ')}</td></tr>`).join('')}</tbody><tfoot><tr><td>TOTAL</td><td style="color:var(--accent2);font-family:monospace">${total.toFixed(2)}</td><td></td></tr></tfoot></table></div>`;
-  const active=state.entries.filter(e=>!e.end_ts);
-  const aWrap=document.getElementById('activeClockins');
+  wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Total Hours</th><th>By Project</th></tr></thead><tbody>${Object.entries(byEmp).sort((a,b)=>a[0].localeCompare(b[0])).map(([emp,d])=>`<tr><td style="font-weight:600;color:var(--text)">${emp}</td><td style="color:var(--accent2);font-family:monospace;font-weight:600">${d.hours.toFixed(2)}</td><td style="font-size:.78rem">${Object.entries(d.byProject).map(([p,h])=>`<span class="badge badge-blue" style="margin:1px">${p.length>26?p.slice(0,26)+'…':p}: ${h.toFixed(1)}h</span>`).join(' ')}</td></tr>`).join('')}</tbody><tfoot><tr><td>TOTAL</td><td style="color:var(--accent2);font-family:monospace">${total.toFixed(2)}</td><td></td></tr></tfoot></table></div>`;
+  const active=state.entries.filter(e=>!e.end_ts),aWrap=document.getElementById('activeClockins');
   if(!active.length){aWrap.innerHTML='<div class="empty-state">No one currently clocked in.</div>';return;}
   aWrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Project</th><th>Category</th><th>Clocked In</th><th>Duration</th></tr></thead><tbody>${active.map(e=>`<tr><td><span class="dot dot-green"></span>${empName(e.employee_id)}</td><td>${projName(e.project_id)}</td><td>${catBadge(projCat(e.project_id))}</td><td>${fmtTime(e.start_ts)}</td><td>${hhmm(Date.now()-new Date(e.start_ts).getTime())}</td></tr>`).join('')}</tbody></table></div>`;
 }
 
-function populateProfitYears() {
-  const years=[...new Set(state.entries.map(e=>e.date?.slice(0,4)).filter(Boolean))].sort().reverse();
-  ['profitYear','avgYear'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el) el.innerHTML='<option value="">All Time</option>'+years.map(y=>`<option value="${y}">${y}</option>`).join('');
-  });
-  const pc=document.getElementById('profitCat');
-  if(pc) pc.innerHTML='<option value="">All Categories</option>'+state.categories.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
-}
-function populateAvgYears(){ populateProfitYears(); }
+// ANALYTICS
+function setPieCurrentPeriod(){const cp=getPeriods()[currentPeriodIdx()];document.getElementById('pieFrom').value=cp.start.toISOString().slice(0,10);document.getElementById('pieTo').value=cp.end.toISOString().slice(0,10);renderPieChart();}
+function setPieThisYear(){const y=new Date().getFullYear();document.getElementById('pieFrom').value=`${y}-01-01`;document.getElementById('pieTo').value=`${y}-12-31`;renderPieChart();}
+function setEmpHrsCurrentPeriod(){const cp=getPeriods()[currentPeriodIdx()];document.getElementById('empHrsFrom').value=cp.start.toISOString().slice(0,10);document.getElementById('empHrsTo').value=cp.end.toISOString().slice(0,10);renderEmpHours();}
+function setEmpHrsThisYear(){const y=new Date().getFullYear();document.getElementById('empHrsFrom').value=`${y}-01-01`;document.getElementById('empHrsTo').value=`${y}-12-31`;renderEmpHours();}
 
-function renderCategoryAverages() {
+function renderPieChart(){
+  const from=document.getElementById('pieFrom').value,to=document.getElementById('pieTo').value;
+  if(!from||!to){document.getElementById('pieChartWrap').innerHTML='<div class="empty-state">Select a date range above.</div>';return;}
+  let entries=state.entries.filter(e=>e.end_ts&&e.date>=from&&e.date<=to);
+  if(!entries.length){document.getElementById('pieChartWrap').innerHTML='<div class="empty-state">No entries for this period.</div>';return;}
+  const byCat={};
+  entries.forEach(e=>{const cat=projCat(e.project_id);const key=cat?cat.name:'Untagged';byCat[key]=(byCat[key]||0)+(e.hours||0);});
+  const total=Object.values(byCat).reduce((a,b)=>a+b,0);
+  const sorted=Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+  // Draw SVG pie chart
+  const size=220,cx=110,cy=110,r=90;
+  let startAngle=-Math.PI/2;
+  let slices='',legendItems='';
+  sorted.forEach(([name,hrs])=>{
+    const pct=hrs/total;
+    const angle=pct*2*Math.PI;
+    const endAngle=startAngle+angle;
+    const x1=cx+r*Math.cos(startAngle),y1=cy+r*Math.sin(startAngle);
+    const x2=cx+r*Math.cos(endAngle),y2=cy+r*Math.sin(endAngle);
+    const largeArc=angle>Math.PI?1:0;
+    const c=CAT_COLORS[name]||'#94a3b8';
+    slices+=`<path d="M${cx},${cy} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${largeArc},1 ${x2.toFixed(1)},${y2.toFixed(1)} Z" fill="${c}" stroke="#fff" stroke-width="2" opacity="0.9"/>`;
+    legendItems+=`<div class="legend-item"><div class="legend-dot" style="background:${c}"></div><span style="flex:1;color:var(--text)">${name}</span><span style="font-family:monospace;color:var(--accent2);font-weight:600">${hrs.toFixed(1)}h</span><span style="color:var(--text3);font-size:.78rem;margin-left:6px">${(pct*100).toFixed(0)}%</span></div>`;
+    startAngle=endAngle;
+  });
+  document.getElementById('pieChartWrap').innerHTML=`
+    <div class="pie-wrap">
+      <div style="flex-shrink:0">
+        <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${slices}</svg>
+        <div style="text-align:center;margin-top:8px;font-size:.82rem;color:var(--text2)">Total: <strong>${total.toFixed(1)} hrs</strong></div>
+      </div>
+      <div class="pie-legend">${legendItems}</div>
+    </div>`;
+}
+
+function renderEmpHours(){
+  const from=document.getElementById('empHrsFrom').value,to=document.getElementById('empHrsTo').value;
+  if(!from||!to){document.getElementById('empHoursWrap').innerHTML='<div class="empty-state">Select a date range above.</div>';return;}
+  let entries=state.entries.filter(e=>e.end_ts&&e.date>=from&&e.date<=to);
+  if(!entries.length){document.getElementById('empHoursWrap').innerHTML='<div class="empty-state">No entries for this period.</div>';return;}
+  const byEmp={};
+  entries.forEach(e=>{const n=empName(e.employee_id);if(!byEmp[n])byEmp[n]={hours:0,days:new Set(),entries:0};byEmp[n].hours+=e.hours||0;byEmp[n].days.add(e.date);byEmp[n].entries++;});
+  const maxHrs=Math.max(...Object.values(byEmp).map(d=>d.hours));
+  const rows=Object.entries(byEmp).sort((a,b)=>b[1].hours-a[1].hours);
+  document.getElementById('empHoursWrap').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Hours</th><th>Days Worked</th><th>Entries</th><th style="min-width:160px">Visual</th></tr></thead><tbody>${rows.map(([name,d])=>{const pct=maxHrs>0?(d.hours/maxHrs)*100:0;return `<tr><td style="font-weight:600;color:var(--text)">${name}</td><td style="font-family:monospace;color:var(--accent2);font-weight:600">${d.hours.toFixed(1)}</td><td>${d.days.size}</td><td>${d.entries}</td><td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:10px;background:var(--surface2);border-radius:5px;overflow:hidden;border:1px solid var(--border)"><div style="width:${pct}%;height:100%;background:var(--accent);border-radius:5px"></div></div><span style="font-size:.75rem;color:var(--text3);white-space:nowrap">${d.hours.toFixed(1)}h</span></div></td></tr>`;}).join('')}</tbody><tfoot><tr><td>TOTAL</td><td style="font-family:monospace;color:var(--accent2)">${rows.reduce((s,[,d])=>s+d.hours,0).toFixed(1)}</td><td></td><td></td><td></td></tr></tfoot></table></div>`;
+}
+
+function populateAvgYears(){
+  const years=[...new Set(state.entries.map(e=>e.date?.slice(0,4)).filter(Boolean))].sort().reverse();
+  const el=document.getElementById('avgYear');
+  if(el)el.innerHTML='<option value="">All Time</option>'+years.map(y=>`<option value="${y}">${y}</option>`).join('');
+}
+
+function renderCategoryAverages(){
   const wrap=document.getElementById('catAvgTable');if(!wrap)return;
   const year=document.getElementById('avgYear')?.value||'';
   let entries=state.entries.filter(e=>e.end_ts);
@@ -941,37 +865,21 @@ function renderCategoryAverages() {
   const catStats={};
   state.categories.forEach(cat=>catStats[cat.name]={totalHours:0,projects:new Set(),cat});
   catStats['Untagged']={totalHours:0,projects:new Set(),cat:null};
-  entries.forEach(e=>{
-    const cat=projCat(e.project_id);
-    const key=cat?cat.name:'Untagged';
-    if(!catStats[key])catStats[key]={totalHours:0,projects:new Set(),cat};
-    catStats[key].totalHours+=e.hours||0;
-    catStats[key].projects.add(e.project_id);
-  });
+  entries.forEach(e=>{const cat=projCat(e.project_id);const key=cat?cat.name:'Untagged';if(!catStats[key])catStats[key]={totalHours:0,projects:new Set(),cat};catStats[key].totalHours+=e.hours||0;catStats[key].projects.add(e.project_id);});
   const rows=Object.entries(catStats).filter(([,d])=>d.projects.size>0).sort((a,b)=>b[1].totalHours-a[1].totalHours);
-  if(!rows.length){wrap.innerHTML='<div class="empty-state">No data yet.</div>';return;}
+  if(!rows.length){wrap.innerHTML='<div class="empty-state">No data.</div>';return;}
   const maxAvg=Math.max(...rows.map(([,d])=>d.projects.size>0?d.totalHours/d.projects.size:0));
-  wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Category</th><th>Events</th><th>Total Hrs</th><th>Avg Hrs / Event</th><th>Avg Rate</th><th>Avg Earned</th><th style="min-width:150px">Visual</th></tr></thead><tbody>${rows.map(([catName,d])=>{
-    const avg=d.projects.size>0?d.totalHours/d.projects.size:0;
-    const barPct=maxAvg>0?(avg/maxAvg)*100:0;
-    const c=d.cat?(d.cat.color||CAT_COLORS[catName]||'#64748b'):'#555a7a';
-    const projsInCat=[...d.projects];
-    const rates=projsInCat.map(pid=>{const p=state.projects.find(x=>x.id===pid);return p?.hourly_rate||0;}).filter(r=>r>0);
-    const avgRate=rates.length>0?rates.reduce((a,b)=>a+b,0)/rates.length:null;
-    const avgEarned=avgRate?(avg*avgRate):null;
-    return `<tr>
-      <td>${catName==='Untagged'?'<span style="color:var(--text3)">Untagged</span>':`<span style="background:${c}22;color:${c};border:1px solid ${c}44;padding:2px 9px;border-radius:10px;font-size:.78rem;font-weight:600">${catName}</span>`}</td>
-      <td style="font-family:monospace;color:var(--text)">${d.projects.size}</td>
-      <td style="font-family:monospace;color:var(--accent2)">${d.totalHours.toFixed(1)}</td>
-      <td><span style="font-family:monospace;font-size:1.05rem;font-weight:700;color:var(--accent)">${avg.toFixed(1)}</span> <span style="color:var(--text3);font-size:.78rem">hrs</span></td>
-      <td style="color:var(--text3);font-size:.82rem">${avgRate?'$'+avgRate.toFixed(2)+'/hr':'—'}</td>
-      <td style="color:var(--accent2);font-weight:600">${avgEarned?'$'+avgEarned.toFixed(0):'—'}</td>
-      <td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:10px;background:var(--surface2);border-radius:5px;overflow:hidden"><div style="width:${barPct}%;height:100%;background:${c};border-radius:5px"></div></div><span style="font-size:.75rem;color:var(--text3);white-space:nowrap">${avg.toFixed(1)}h</span></div></td>
-    </tr>`;
-  }).join('')}</tbody><tfoot><tr><td>TOTAL</td><td style="font-family:monospace">${[...new Set(entries.map(e=>e.project_id))].length} projects</td><td style="font-family:monospace;color:var(--accent2)">${entries.reduce((s,e)=>s+(e.hours||0),0).toFixed(1)}</td><td colspan="4"></td></tr></tfoot></table></div>`;
+  wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Category</th><th>Events</th><th>Total Hrs</th><th>Avg Hrs/Event</th><th style="min-width:150px">Visual</th></tr></thead><tbody>${rows.map(([catName,d])=>{const avg=d.projects.size>0?d.totalHours/d.projects.size:0;const barPct=maxAvg>0?(avg/maxAvg)*100:0;const c=d.cat?(d.cat.color||CAT_COLORS[catName]||'#64748b'):'#9ba3c0';return `<tr><td>${catName==='Untagged'?'<span style="color:var(--text3)">Untagged</span>':`<span style="background:${c}22;color:${c};border:1px solid ${c}44;padding:2px 9px;border-radius:10px;font-size:.78rem;font-weight:600">${catName}</span>`}</td><td style="font-family:monospace">${d.projects.size}</td><td style="font-family:monospace;color:var(--accent2)">${d.totalHours.toFixed(1)}</td><td><span style="font-family:monospace;font-size:1.05rem;font-weight:700;color:var(--accent)">${avg.toFixed(1)}</span> <span style="color:var(--text3);font-size:.78rem">hrs</span></td><td><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;height:10px;background:var(--surface2);border-radius:5px;overflow:hidden;border:1px solid var(--border)"><div style="width:${barPct}%;height:100%;background:${c};border-radius:5px"></div></div><span style="font-size:.75rem;color:var(--text3)">${avg.toFixed(1)}h</span></div></td></tr>`;}).join('')}</tbody></table></div>`;
 }
 
-function renderProfitability() {
+function populateProfitYears(){
+  const years=[...new Set(state.entries.map(e=>e.date?.slice(0,4)).filter(Boolean))].sort().reverse();
+  const py=document.getElementById('profitYear');if(py)py.innerHTML='<option value="">All Time</option>'+years.map(y=>`<option value="${y}">${y}</option>`).join('');
+  const pc=document.getElementById('profitCat');if(pc)pc.innerHTML='<option value="">All Categories</option>'+state.categories.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
+  const rp=document.getElementById('rateProject');if(rp)rp.innerHTML=state.projects.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+}
+
+function renderProfitability(){
   const q=(document.getElementById('profitSearch')?.value||'').toLowerCase();
   const catFilter=document.getElementById('profitCat')?.value||'';
   const year=document.getElementById('profitYear')?.value||'';
@@ -979,66 +887,24 @@ function renderProfitability() {
   let entries=state.entries.filter(e=>e.end_ts);
   if(year)entries=entries.filter(e=>e.date?.startsWith(year));
   const byProj={};
-  entries.forEach(e=>{
-    const pid=e.project_id;
-    if(!byProj[pid])byProj[pid]={hours:0,employees:new Set(),dates:[],entries:0};
-    byProj[pid].hours+=e.hours||0;
-    byProj[pid].employees.add(e.employee_id);
-    byProj[pid].dates.push(e.date);
-    byProj[pid].entries++;
-  });
-  let rows=Object.entries(byProj).filter(([pid,])=>{
-    const pn=projName(parseInt(pid));
-    if(!pn.toLowerCase().includes(q))return false;
-    if(catFilter){const cat=projCat(parseInt(pid));if(!cat||cat.name!==catFilter)return false;}
-    return true;
-  });
+  entries.forEach(e=>{if(!byProj[e.project_id])byProj[e.project_id]={hours:0,employees:new Set(),dates:[],entries:0};byProj[e.project_id].hours+=e.hours||0;byProj[e.project_id].employees.add(e.employee_id);byProj[e.project_id].dates.push(e.date);byProj[e.project_id].entries++;});
+  let rows=Object.entries(byProj).filter(([pid])=>{const pn=projName(parseInt(pid));if(!pn.toLowerCase().includes(q))return false;if(catFilter){const cat=projCat(parseInt(pid));if(!cat||cat.name!==catFilter)return false;}return true;});
   if(sortBy==='hours')rows.sort((a,b)=>b[1].hours-a[1].hours);
   else if(sortBy==='name')rows.sort((a,b)=>projName(parseInt(a[0])).localeCompare(projName(parseInt(b[0]))));
-  else if(sortBy==='recent')rows.sort((a,b)=>Math.max(...b[1].dates.map(d=>new Date(d)))-Math.max(...a[1].dates.map(d=>new Date(d))));
+  else rows.sort((a,b)=>Math.max(...b[1].dates.map(d=>new Date(d)))-Math.max(...a[1].dates.map(d=>new Date(d))));
   const wrap=document.getElementById('profitabilityTable');
   if(!rows.length){wrap.innerHTML='<div class="empty-state">No projects found.</div>';return;}
-  wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Project</th><th>Category</th><th>Hours</th><th>Staff</th><th>Last Activity</th><th>Rate</th><th>Earned</th><th>vs Budget</th></tr></thead><tbody>${rows.map(([pidStr,d])=>{
-    const pid=parseInt(pidStr),pn=projName(pid);
-    const proj=state.projects.find(p=>p.id===pid);
-    const cat=projCat(pid);
-    const rate=proj?.hourly_rate||0,budget=proj?.budget||0;
-    const earned=rate?(d.hours*rate).toFixed(2):'—';
-    const pct=budget&&rate?Math.min(100,((d.hours*rate)/budget)*100):0;
-    const lastDate=d.dates.sort().reverse()[0];
-    const barColor=pct>90?'var(--warn)':pct>70?'#f7c04f':'var(--accent2)';
-    return `<tr><td style="color:var(--text);font-weight:500;max-width:200px"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${pn}">${pn}</div></td><td>${catBadge(cat)}</td><td style="color:var(--accent2);font-family:monospace;font-weight:600">${d.hours.toFixed(1)}</td><td>${d.employees.size}</td><td>${fmt(lastDate)}</td><td style="color:${rate?'var(--accent2)':'var(--text3)'}">${rate?'$'+rate+'/hr':'—'}</td><td style="color:var(--accent2)">${earned!=='—'?'$'+Number(earned).toLocaleString():earned}</td><td style="min-width:100px">${budget?`<div style="font-size:.74rem;color:var(--text3)">$${Number(earned||0).toFixed(0)} / $${budget}</div><div class="profit-bar"><div class="profit-fill" style="width:${pct}%;background:${barColor}"></div></div>`:'—'}</td></tr>`;
-  }).join('')}</tbody></table></div>`;
-  // rates list
-  const rp=document.getElementById('rateProject');
-  if(rp) rp.innerHTML=state.projects.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Project</th><th>Category</th><th>Hours</th><th>Staff</th><th>Last Activity</th><th>Rate</th><th>Earned</th></tr></thead><tbody>${rows.map(([pidStr,d])=>{const pid=parseInt(pidStr),pn=projName(pid);const proj=state.projects.find(p=>p.id===pid);const cat=projCat(pid);const rate=proj?.hourly_rate||0;const earned=rate?(d.hours*rate).toFixed(2):'—';const lastDate=d.dates.sort().reverse()[0];return `<tr><td style="font-weight:500;color:var(--text);max-width:200px"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${pn}">${pn}</div></td><td>${catBadge(cat)}</td><td style="color:var(--accent2);font-family:monospace;font-weight:600">${d.hours.toFixed(1)}</td><td>${d.employees.size}</td><td>${fmt(lastDate)}</td><td style="color:${rate?'var(--accent2)':'var(--text3)'}">${rate?'$'+rate+'/hr':'—'}</td><td style="color:var(--accent2)">${earned!=='—'?'$'+Number(earned).toLocaleString():earned}</td></tr>`;}).join('')}</tbody></table></div>`;
   const ratesWithValues=state.projects.filter(p=>p.hourly_rate>0);
   document.getElementById('ratesList').innerHTML=ratesWithValues.length?`<div class="table-wrap mb12"><table><thead><tr><th>Project</th><th>$/hr</th><th>Budget</th><th></th></tr></thead><tbody>${ratesWithValues.map(p=>`<tr><td style="color:var(--text)">${p.name.length>40?p.name.slice(0,40)+'…':p.name}</td><td style="color:var(--accent2)">$${p.hourly_rate}</td><td>${p.budget?'$'+p.budget:'—'}</td><td><button class="delete-btn" onclick="removeRate(${p.id})">✕</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="text-sm mb12">No rates set yet.</div>';
 }
-
-async function saveRate() {
-  const projId=parseInt(document.getElementById('rateProject').value);
-  const hourly=parseFloat(document.getElementById('rateHourly').value)||0;
-  const budget=parseFloat(document.getElementById('rateBudget').value)||0;
-  if(!projId)return;
-  await sb.patch('projects',`id=eq.${projId}`,{hourly_rate:hourly,budget});
-  const proj=state.projects.find(p=>p.id===projId);
-  if(proj){proj.hourly_rate=hourly;proj.budget=budget;}
-  document.getElementById('rateHourly').value='';document.getElementById('rateBudget').value='';
-  renderProfitability();toast('Rate saved!');
-}
-async function removeRate(projId) {
-  await sb.patch('projects',`id=eq.${projId}`,{hourly_rate:0,budget:0});
-  const proj=state.projects.find(p=>p.id===projId);
-  if(proj){proj.hourly_rate=0;proj.budget=0;}
-  renderProfitability();toast('Rate removed.');
-}
+async function saveRate(){const projId=parseInt(document.getElementById('rateProject').value);const hourly=parseFloat(document.getElementById('rateHourly').value)||0;const budget=parseFloat(document.getElementById('rateBudget').value)||0;if(!projId)return;await sb.patch('projects',`id=eq.${projId}`,{hourly_rate:hourly,budget});const proj=state.projects.find(p=>p.id===projId);if(proj){proj.hourly_rate=hourly;proj.budget=budget;}document.getElementById('rateHourly').value='';document.getElementById('rateBudget').value='';renderProfitability();toast('Rate saved!');}
+async function removeRate(projId){await sb.patch('projects',`id=eq.${projId}`,{hourly_rate:0,budget:0});const proj=state.projects.find(p=>p.id===projId);if(proj){proj.hourly_rate=0;proj.budget=0;}renderProfitability();toast('Rate removed.');}
 
 let entryPage=0;
 const PAGE_SIZE=100;
-function renderAllEntries() {
-  const emp=document.getElementById('filterEmployee').value;
-  const proj=document.getElementById('filterProject').value;
+function renderAllEntries(){
+  const emp=document.getElementById('filterEmployee').value,proj=document.getElementById('filterProject').value;
   const cat=document.getElementById('filterCat').value;
   const q=(document.getElementById('entrySearch')?.value||'').toLowerCase();
   const from=document.getElementById('filterDateFrom').value,to=document.getElementById('filterDateTo').value;
@@ -1060,24 +926,31 @@ function renderAllEntries() {
 }
 async function mgrDeleteEntry(id){if(!confirm('Delete?'))return;await sb.delete('time_entries',`id=eq.${id}`);state.entries=state.entries.filter(e=>e.id!==id);renderAllEntries();toast('Deleted.');}
 
-async function renderMileage() {
+function renderMileage(){
   const emp=document.getElementById('filterMileEmp').value;
-  let miles=emp?state.mileage.filter(m=>empName(m.employee_id)===emp):[...state.mileage];
+  const from=document.getElementById('filterMileFrom').value;
+  const to=document.getElementById('filterMileTo').value;
+  let miles=[...state.mileage];
+  if(emp)miles=miles.filter(m=>empName(m.employee_id)===emp);
+  if(from)miles=miles.filter(m=>m.date>=from);
+  if(to)miles=miles.filter(m=>m.date<=to);
   miles.sort((a,b)=>b.date.localeCompare(a.date));
   const wrap=document.getElementById('mileageWrap');
   if(!miles.length){wrap.innerHTML='<div class="empty-state">No mileage entries.</div>';return;}
-  wrap.innerHTML=`<table><thead><tr><th>Date</th><th>Employee</th><th>Miles</th><th>Purpose</th><th></th></tr></thead><tbody>${miles.map(m=>`<tr><td>${fmt(m.date)}</td><td style="font-weight:500;color:var(--text)">${empName(m.employee_id)}</td><td style="color:var(--accent2);font-family:monospace">${m.miles.toFixed(1)}</td><td>${m.purpose||''}</td><td><button class="delete-btn" onclick="deleteMileage(${m.id})">✕</button></td></tr>`).join('')}</tbody><tfoot><tr><td colspan="2">TOTAL</td><td style="color:var(--accent2);font-family:monospace">${miles.reduce((s,m)=>s+m.miles,0).toFixed(1)}</td><td colspan="2"></td></tr></tfoot></table>`;
+  const total=miles.reduce((s,m)=>s+m.miles,0);
+  wrap.innerHTML=`<table><thead><tr><th>Date</th><th>Employee</th><th>Miles</th><th>Purpose</th><th></th></tr></thead><tbody>${miles.map(m=>`<tr><td>${fmt(m.date)}</td><td style="font-weight:500;color:var(--text)">${empName(m.employee_id)}</td><td style="color:var(--accent2);font-family:monospace">${m.miles.toFixed(1)}</td><td>${m.purpose||''}</td><td><button class="delete-btn" onclick="deleteMileage(${m.id})">✕</button></td></tr>`).join('')}</tbody><tfoot><tr><td colspan="2">TOTAL</td><td style="color:var(--accent2);font-family:monospace">${total.toFixed(1)}</td><td colspan="2"></td></tr></tfoot></table>`;
 }
+function clearMileFilters(){document.getElementById('filterMileFrom').value='';document.getElementById('filterMileTo').value='';document.getElementById('filterMileEmp').value='';renderMileage();}
 async function deleteMileage(id){if(!confirm('Delete?'))return;await sb.delete('mileage',`id=eq.${id}`);state.mileage=state.mileage.filter(m=>m.id!==id);renderMileage();toast('Deleted.');}
 
-function populateMgrFilters() {
+function populateMgrFilters(){
   ['filterEmployee','exportEmployee'].forEach(id=>{const s=document.getElementById(id),cur=s.value;s.innerHTML='<option value="">All Employees</option>'+state.employees.map(e=>`<option>${e.name}</option>`).join('');if(cur)s.value=cur;});
   document.getElementById('filterProject').innerHTML='<option value="">All Projects</option>'+state.projects.map(p=>`<option>${p.name}</option>`).join('');
   document.getElementById('filterCat').innerHTML='<option value="">All Categories</option>'+state.categories.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
   document.getElementById('filterMileEmp').innerHTML='<option value="">All Employees</option>'+state.employees.map(e=>`<option>${e.name}</option>`).join('');
 }
 
-function renderManageTab() {
+function renderManageTab(){
   const empQ=(document.getElementById('empFilterMgr')?.value||'').toLowerCase();
   const projQ=(document.getElementById('projFilterMgr')?.value||'').toLowerCase();
   const projCatF=document.getElementById('projCatFilter')?.value||'';
@@ -1087,128 +960,109 @@ function renderManageTab() {
   document.getElementById('empListMgr').innerHTML=filtEmps.map(e=>`<div id="emp-row-${e.id}">
     <div class="flex-between" style="padding:5px 0;border-bottom:1px solid var(--border)">
       <span style="font-size:.84rem;flex:1">${e.name}</span>
-      <div style="display:flex;gap:2px">
-        <button class="edit-btn" onclick="startEditEmp(${e.id},'${e.name.replace(/'/g,"\'")}')">&#9998;</button>
-        <button class="delete-btn" onclick="removeEmployee(${e.id})">✕</button>
-      </div>
+      <div style="display:flex;gap:2px"><button class="edit-btn" onclick="startEditEmp(${e.id})">&#9998;</button><button class="delete-btn" onclick="removeEmployee(${e.id})">✕</button></div>
     </div>
     <div class="edit-row" id="emp-edit-${e.id}">
       <input type="text" id="emp-input-${e.id}" value="${e.name}" style="padding:6px 10px;font-size:.84rem" onkeydown="if(event.key==='Enter')saveEditEmp(${e.id});if(event.key==='Escape')cancelEditEmp(${e.id})">
       <div class="flex-center"><button class="btn btn-primary btn-sm" onclick="saveEditEmp(${e.id})">Save</button><button class="btn btn-ghost btn-sm" onclick="cancelEditEmp(${e.id})">Cancel</button></div>
     </div>
-  </div>`).join('') || '<div class="text-sm">No employees match.</div>';
+  </div>`).join('')||'<div class="text-sm">No employees match.</div>';
 
   let filtProjs=state.projects.filter(p=>p.name.toLowerCase().includes(projQ));
   const untaggedCount=state.projects.filter(p=>!p.category_id).length;
-  if(projCatF==='__untagged__') filtProjs=filtProjs.filter(p=>!p.category_id);
-  else if(projCatF) { const cid=state.catNameMap[projCatF]; filtProjs=filtProjs.filter(p=>p.category_id===cid); }
-  document.getElementById('projCatFilter').innerHTML=`<option value="">All</option><option value="__untagged__">⚠ Untagged (${untaggedCount})</option>`+state.categories.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
-  document.getElementById('projCatFilter').value=projCatF;
+  if(projCatF==='__untagged__')filtProjs=filtProjs.filter(p=>!p.category_id);
+  else if(projCatF){const cid=state.catNameMap[projCatF];filtProjs=filtProjs.filter(p=>p.category_id===cid);}
+  document.getElementById('projCatFilter').innerHTML=`<option value="">All</option><option value="__untagged__">⚠ Untagged (${untaggedCount})</option>`+state.categories.map(c=>`<option value="${c.name}" ${projCatF===c.name?'selected':''}>${c.name}</option>`).join('');
   document.getElementById('newProjCat').innerHTML='<option value="">No category</option>'+state.categories.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
-
-  document.getElementById('projListMgr').innerHTML=filtProjs.map(p=>{
-    const cat=p.category_id?state.catMap[p.category_id]:null;
-    return `<div id="proj-row-${p.id}">
-      <div class="flex-between" style="padding:5px 0;border-bottom:1px solid var(--border);gap:4px">
-        <div style="flex:1;min-width:0">
-          <div style="font-size:.83rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${p.name}">${p.name.length>45?p.name.slice(0,45)+'…':p.name}</div>
-          <div style="margin-top:2px">${catBadge(cat)}</div>
-        </div>
-        <div style="display:flex;gap:2px;flex-shrink:0">
-          <button class="edit-btn" onclick="startEditProj(${p.id},'${safeStr(p.name)}')">&#9998;</button>
-          <button class="delete-btn" onclick="removeProject(${p.id})">✕</button>
-        </div>
-      </div>
-      <div class="edit-row" id="proj-edit-${p.id}">
-        <input type="text" id="proj-input-${p.id}" value="${p.name.replace(/"/g,'&quot;')}" style="padding:6px 10px;font-size:.84rem">
-        <select id="proj-cat-${p.id}" style="padding:6px 10px;font-size:.84rem">
-          <option value="">No category</option>
-          ${state.categories.map(c=>`<option value="${c.id}" ${p.category_id===c.id?'selected':''}>${c.name}</option>`).join('')}
-        </select>
-        <div class="flex-center">
-          <button class="btn btn-primary btn-sm" onclick="saveEditProj(${p.id})">Save</button>
-          <button class="btn btn-ghost btn-sm" onclick="cancelEditProj(${p.id})">Cancel</button>
-        </div>
-      </div>
-    </div>`;
-  }).join('') || '<div class="text-sm">No projects match.</div>';
-
+  document.getElementById('projListMgr').innerHTML=filtProjs.map(p=>{const cat=p.category_id?state.catMap[p.category_id]:null;return `<div id="proj-row-${p.id}">
+    <div class="flex-between" style="padding:5px 0;border-bottom:1px solid var(--border);gap:4px">
+      <div style="flex:1;min-width:0"><div style="font-size:.83rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${p.name}">${p.name.length>45?p.name.slice(0,45)+'…':p.name}</div><div style="margin-top:2px">${catBadge(cat)}</div></div>
+      <div style="display:flex;gap:2px;flex-shrink:0"><button class="edit-btn" onclick="startEditProj(${p.id})">&#9998;</button><button class="delete-btn" onclick="removeProject(${p.id})">✕</button></div>
+    </div>
+    <div class="edit-row" id="proj-edit-${p.id}">
+      <input type="text" id="proj-input-${p.id}" value="${p.name.replace(/"/g,'&quot;')}" style="padding:6px 10px;font-size:.84rem">
+      <select id="proj-cat-${p.id}" style="padding:6px 10px;font-size:.84rem"><option value="">No category</option>${state.categories.map(c=>`<option value="${c.id}" ${p.category_id===c.id?'selected':''}>${c.name}</option>`).join('')}</select>
+      <div class="flex-center"><button class="btn btn-primary btn-sm" onclick="saveEditProj(${p.id})">Save</button><button class="btn btn-ghost btn-sm" onclick="cancelEditProj(${p.id})">Cancel</button></div>
+    </div>
+  </div>`;}).join('')||'<div class="text-sm">No projects match.</div>';
   document.getElementById('periodStartDate').value=state.settings['period_start']||todayStr();
 }
 
-function startEditEmp(id,name){document.getElementById(`emp-edit-${id}`).classList.add('active');const inp=document.getElementById(`emp-input-${id}`);inp.focus();inp.select();}
+function startEditEmp(id){document.getElementById(`emp-edit-${id}`).classList.add('active');const inp=document.getElementById(`emp-input-${id}`);inp.focus();inp.select();}
 function cancelEditEmp(id){document.getElementById(`emp-edit-${id}`).classList.remove('active');}
-async function saveEditEmp(id) {
+async function saveEditEmp(id){
   const newName=document.getElementById(`emp-input-${id}`).value.trim();
-  if(!newName){toast('Name cannot be empty.');return;}
+  if(!newName){toast('Cannot be empty.');return;}
   await sb.patch('employees',`id=eq.${id}`,{name:newName});
   const emp=state.employees.find(e=>e.id===id);if(emp)emp.name=newName;
-  rebuildMaps();renderManageTab();populateMgrFilters();renderNameGrid();toast(`Renamed to "${newName}"`);
+  rebuildMaps();renderManageTab();populateMgrFilters();renderNameGrid();toast(`Renamed!`);
 }
-function startEditProj(id,name){document.getElementById(`proj-edit-${id}`).classList.add('active');document.getElementById(`proj-input-${id}`).focus();}
+function startEditProj(id){document.getElementById(`proj-edit-${id}`).classList.add('active');document.getElementById(`proj-input-${id}`).focus();}
 function cancelEditProj(id){document.getElementById(`proj-edit-${id}`).classList.remove('active');}
-async function saveEditProj(id) {
+async function saveEditProj(id){
   const newName=document.getElementById(`proj-input-${id}`).value.trim();
   const catId=document.getElementById(`proj-cat-${id}`).value;
   if(!newName){toast('Cannot be empty.');return;}
   await sb.patch('projects',`id=eq.${id}`,{name:newName,category_id:catId?parseInt(catId):null});
   const proj=state.projects.find(p=>p.id===id);if(proj){proj.name=newName;proj.category_id=catId?parseInt(catId):null;}
-  rebuildMaps();renderManageTab();populateMgrFilters();toast(`Updated "${newName}"`);
+  rebuildMaps();renderManageTab();populateMgrFilters();toast(`Updated!`);
 }
-async function addEmployee() {
+async function addEmployee(){
   const name=document.getElementById('newEmpName').value.trim();
-  if(!name){toast('Enter a name.');return;}
-  if(state.empNameMap[name]){toast('Already exists.');return;}
+  if(!name||state.empNameMap[name]){toast(name?'Already exists.':'Enter a name.');return;}
   const [emp]=await sb.post('employees',[{name}]);
   state.employees.push(emp);state.employees.sort((a,b)=>a.name.localeCompare(b.name));
   rebuildMaps();document.getElementById('newEmpName').value='';
   renderManageTab();populateMgrFilters();renderNameGrid();toast(`${name} added!`);
 }
-async function removeEmployee(id) {
+async function removeEmployee(id){
   const emp=state.employees.find(e=>e.id===id);
   if(!confirm(`Remove "${emp?.name}"?`))return;
   await sb.delete('employees',`id=eq.${id}`);
   state.employees=state.employees.filter(e=>e.id!==id);
   rebuildMaps();renderManageTab();populateMgrFilters();renderNameGrid();
 }
-async function addProject() {
+async function addProject(){
   const name=document.getElementById('newProjName').value.trim();
   const catId=document.getElementById('newProjCat').value;
-  if(!name){toast('Enter a project name.');return;}
-  if(state.projNameMap[name]){toast('Already exists.');return;}
+  if(!name||state.projNameMap[name]){toast(name?'Already exists.':'Enter a name.');return;}
   const [proj]=await sb.post('projects',[{name,category_id:catId?parseInt(catId):null}]);
   state.projects.push(proj);state.projects.sort((a,b)=>a.name.localeCompare(b.name));
   rebuildMaps();document.getElementById('newProjName').value='';
   renderManageTab();populateMgrFilters();toast(`"${name}" added!`);
 }
-async function removeProject(id) {
+async function removeProject(id){
   const proj=state.projects.find(p=>p.id===id);
   if(!confirm(`Remove "${proj?.name}"?`))return;
   await sb.delete('projects',`id=eq.${id}`);
   state.projects=state.projects.filter(p=>p.id!==id);
   rebuildMaps();renderManageTab();populateMgrFilters();
 }
-async function changePassword() {
+async function changePassword(){
   const np=document.getElementById('newPassword').value;
   if(!np||np.length<4){toast('Min 4 characters.');return;}
   await sb.upsert('settings',{key:'manager_password',value:np});
-  state.settings['manager_password']=np;
-  document.getElementById('newPassword').value='';toast('Password updated!');
+  state.settings['manager_password']=np;document.getElementById('newPassword').value='';toast('Password updated!');
 }
-async function savePeriodStart() {
+async function savePeriodStart(){
   const val=document.getElementById('periodStartDate').value;
   await sb.upsert('settings',{key:'period_start',value:val});
-  state.settings['period_start']=val;
-  activePeriodIdx=currentPeriodIdx();renderOverview();toast('Pay period updated.');
+  state.settings['period_start']=val;activePeriodIdx=currentPeriodIdx();renderOverview();toast('Updated.');
 }
 
-function renderExportTab() {
+function exportBackup(){
+  const backup={employees:state.employees,projects:state.projects,categories:state.categories,entries:state.entries,mileage:state.mileage,settings:state.settings,exported_at:new Date().toISOString()};
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(backup,null,2)],{type:'application/json'}));
+  a.download=`TimeClock_Backup_${todayStr()}.json`;a.click();toast('Backup downloaded!');
+}
+
+function renderExportTab(){
   const periods=getPeriods(30).reverse();
   document.getElementById('exportPeriod').innerHTML=periods.map((p,i)=>`<option value="${i}">${periodLabel(p)}</option>`).join('');
   populateMgrFilters();
 }
 function getExportPeriod(){return getPeriods(30).reverse()[parseInt(document.getElementById('exportPeriod').value)||0];}
-function renderExportPreview() {
+function renderExportPreview(){
   const p=getExportPeriod(),emp=document.getElementById('exportEmployee').value;
   const ps=p.start.toISOString().slice(0,10),pe=p.end.toISOString().slice(0,10);
   let entries=state.entries.filter(e=>e.end_ts&&e.date>=ps&&e.date<=pe);
@@ -1222,82 +1076,85 @@ function renderExportPreview() {
   miles.forEach(m=>{const n=empName(m.employee_id);if(!byEmp[n])byEmp[n]={hours:0,count:0,miles:0};byEmp[n].miles+=m.miles;});
   wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Total Hours</th><th>Total Miles</th><th>Entries</th></tr></thead><tbody>${Object.entries(byEmp).sort((a,b)=>a[0].localeCompare(b[0])).map(([n,d])=>`<tr><td style="font-weight:500;color:var(--text)">${n}</td><td style="color:var(--accent2);font-family:monospace">${d.hours.toFixed(2)}</td><td>${d.miles.toFixed(1)}</td><td>${d.count}</td></tr>`).join('')}</tbody></table></div>`;
 }
-function buildExportData() {
+
+function buildExportData(entries, miles, label){
+  entries.sort((a,b)=>empName(a.employee_id).localeCompare(empName(b.employee_id))||new Date(a.start_ts)-new Date(b.start_ts));
+  const rows=entries.map(e=>({'Period/Label':label,'Employee':empName(e.employee_id),'Date':fmt(e.date),'Clock In':fmtTime(e.start_ts),'Clock Out':fmtTime(e.end_ts),'Hours Worked':e.hours?.toFixed(2)||'','Project':projName(e.project_id),'Category':(projCat(e.project_id)?.name||''),'Notes':e.notes||'','Miles':''}));
+  miles.forEach(m=>rows.push({'Period/Label':label,'Employee':empName(m.employee_id),'Date':fmt(m.date),'Clock In':'','Clock Out':'','Hours Worked':'','Project':'MILEAGE','Category':'','Notes':m.purpose||'','Miles':m.miles.toFixed(1)}));
+  return rows;
+}
+
+function exportExcel(){
   const p=getExportPeriod(),emp=document.getElementById('exportEmployee').value;
   const ps=p.start.toISOString().slice(0,10),pe=p.end.toISOString().slice(0,10);
   let entries=state.entries.filter(e=>e.end_ts&&e.date>=ps&&e.date<=pe);
   if(emp)entries=entries.filter(e=>empName(e.employee_id)===emp);
-  entries.sort((a,b)=>empName(a.employee_id).localeCompare(empName(b.employee_id))||new Date(a.start_ts)-new Date(b.start_ts));
-  const pl=periodLabel(p);
-  const rows=entries.map(e=>({'Pay Period':pl,'Employee':empName(e.employee_id),'Date':fmt(e.date),'Clock In':fmtTime(e.start_ts),'Clock Out':fmtTime(e.end_ts),'Hours Worked':e.hours?.toFixed(2)||'','Project':projName(e.project_id),'Category':(projCat(e.project_id)?.name||''),'Notes':e.notes||'','Miles':''}));
   let miles=state.mileage.filter(m=>m.date>=ps&&m.date<=pe);
   if(emp)miles=miles.filter(m=>empName(m.employee_id)===emp);
-  miles.forEach(m=>rows.push({'Pay Period':pl,'Employee':empName(m.employee_id),'Date':fmt(m.date),'Clock In':'','Clock Out':'','Hours Worked':'','Project':'MILEAGE','Category':'','Notes':m.purpose||'','Miles':m.miles.toFixed(1)}));
-  return rows;
-}
-function exportExcel() {
-  const data=buildExportData();if(!data.length){toast('No data.');return;}
+  const data=buildExportData(entries,miles,periodLabel(p));
+  if(!data.length){toast('No data.');return;}
   const ws=XLSX.utils.json_to_sheet(data),wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'Time Entries');
-  const p=getExportPeriod(),ps=p.start.toISOString().slice(0,10),pe=p.end.toISOString().slice(0,10);
-  const entries=state.entries.filter(e=>e.end_ts&&e.date>=ps&&e.date<=pe);
+  // Summary sheet
   const byEmp={};entries.forEach(e=>{const n=empName(e.employee_id);byEmp[n]=(byEmp[n]||0)+(e.hours||0);});
-  const miles=state.mileage.filter(m=>m.date>=ps&&m.date<=pe),byEmpM={};
-  miles.forEach(m=>{const n=empName(m.employee_id);byEmpM[n]=(byEmpM[n]||0)+m.miles;});
+  const byEmpM={};miles.forEach(m=>{const n=empName(m.employee_id);byEmpM[n]=(byEmpM[n]||0)+m.miles;});
   const allEmps=[...new Set([...Object.keys(byEmp),...Object.keys(byEmpM)])].sort();
   XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(allEmps.map(e=>({'Employee':e,'Total Hours':(byEmp[e]||0).toFixed(2),'Total Miles':(byEmpM[e]||0).toFixed(1),'Pay Period':periodLabel(p)}))), 'Payroll Summary');
   XLSX.writeFile(wb,`Payroll_${p.start.toISOString().slice(0,10)}.xlsx`);toast('Excel downloaded!');
 }
-function exportCSV() {
-  const data=buildExportData();if(!data.length){toast('No data.');return;}
+
+function exportAllExcel(){
+  // Export ALL entries ever
+  const entries=state.entries.filter(e=>e.end_ts).sort((a,b)=>new Date(a.start_ts)-new Date(b.start_ts));
+  const data=buildExportData(entries,[...state.mileage],'All Time');
+  if(!data.length){toast('No data.');return;}
+  const ws=XLSX.utils.json_to_sheet(data),wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'All Entries');
+  // Summary by employee
+  const byEmp={};
+  entries.forEach(e=>{const n=empName(e.employee_id);if(!byEmp[n])byEmp[n]={hours:0,miles:0};byEmp[n].hours+=e.hours||0;});
+  state.mileage.forEach(m=>{const n=empName(m.employee_id);if(!byEmp[n])byEmp[n]={hours:0,miles:0};byEmp[n].miles+=m.miles;});
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(Object.entries(byEmp).sort((a,b)=>a[0].localeCompare(b[0])).map(([n,d])=>({'Employee':n,'Total Hours':d.hours.toFixed(2),'Total Miles':d.miles.toFixed(1)}))), 'Summary by Employee');
+  // Summary by category
+  const byCat={};
+  entries.forEach(e=>{const cat=projCat(e.project_id)?.name||'Untagged';byCat[cat]=(byCat[cat]||0)+(e.hours||0);});
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([cat,hrs])=>({'Category':cat,'Total Hours':hrs.toFixed(2)}))), 'Summary by Category');
+  XLSX.writeFile(wb,`AllEntries_${todayStr()}.xlsx`);toast('Full export downloaded!');
+}
+
+function exportCSV(){
+  const p=getExportPeriod(),emp=document.getElementById('exportEmployee').value;
+  const ps=p.start.toISOString().slice(0,10),pe=p.end.toISOString().slice(0,10);
+  let entries=state.entries.filter(e=>e.end_ts&&e.date>=ps&&e.date<=pe);
+  if(emp)entries=entries.filter(e=>empName(e.employee_id)===emp);
+  const data=buildExportData(entries,[],periodLabel(p));
+  if(!data.length){toast('No data.');return;}
   const headers=Object.keys(data[0]);
   const csv=[headers.join(','),...data.map(r=>headers.map(h=>JSON.stringify(r[h]??'')).join(','))].join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download=`Payroll_${getExportPeriod().start.toISOString().slice(0,10)}.csv`;a.click();toast('CSV downloaded!');
+  a.download=`Payroll_${p.start.toISOString().slice(0,10)}.csv`;a.click();toast('CSV downloaded!');
 }
 
-function exportBackup() {
-  const backup = {
-    employees: state.employees,
-    projects: state.projects,
-    categories: state.categories,
-    entries: state.entries,
-    mileage: state.mileage,
-    settings: state.settings,
-    exported_at: new Date().toISOString()
-  };
-  const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download=`TimeClock_Backup_${todayStr()}.json`;a.click();toast('Backup downloaded!');
-}
-
-function switchView(v) {
+function switchView(v){
   document.getElementById('view-employee').classList.toggle('active',v==='employee');
   document.getElementById('view-manager').classList.toggle('active',v==='manager');
   document.getElementById('empPill').classList.toggle('active',v==='employee');
   document.getElementById('mgrPill').classList.toggle('active',v==='manager');
 }
+function setSyncStatus(type,msg){const el=document.getElementById('syncStatus');el.className='sync-status sync-'+type;el.innerHTML=msg;}
+function setLoadingMsg(msg){document.getElementById('loadingMsg').textContent=msg;}
+function hideLoading(){document.getElementById('loadingOverlay').style.display='none';}
 
-function setSyncStatus(type, msg) {
-  const el=document.getElementById('syncStatus');
-  el.className='sync-status sync-'+type;
-  el.innerHTML=msg;
-}
-function setLoadingMsg(msg) { document.getElementById('loadingMsg').textContent=msg; }
-function hideLoading() { document.getElementById('loadingOverlay').style.display='none'; }
-
-function checkAutoBackup() {
+function checkAutoBackup(){
   const today=new Date(),dayOfWeek=today.getDay(),dateStr=todayStr();
   const lastBackup=localStorage.getItem('timeclock_last_auto_backup');
-  if(dayOfWeek===1&&lastBackup!==dateStr) {
+  if(dayOfWeek===1&&lastBackup!==dateStr){
     setTimeout(()=>{
-      exportBackup();
-      localStorage.setItem('timeclock_last_auto_backup',dateStr);
+      exportBackup();localStorage.setItem('timeclock_last_auto_backup',dateStr);
       const banner=document.createElement('div');
-      banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:9999;background:#34d9a5;color:#0f1117;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;font-family:system-ui,sans-serif;font-size:.88rem;font-weight:600;box-shadow:0 2px 12px rgba(0,0,0,.3)';
-      banner.innerHTML='<span>&#128190; Weekly auto-backup downloaded! Save it to Google Drive or Dropbox.</span><button onclick="this.parentNode.remove()" style="background:none;border:none;color:#0f1117;font-size:1.2rem;cursor:pointer">✕</button>';
-      document.body.prepend(banner);
-      setTimeout(()=>banner.remove(),12000);
+      banner.style.cssText='position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--accent2);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;font-family:system-ui,sans-serif;font-size:.88rem;font-weight:600;box-shadow:0 2px 12px rgba(0,0,0,.15)';
+      banner.innerHTML='<span>&#128190; Weekly auto-backup downloaded! Save it to Google Drive.</span><button onclick="this.parentNode.remove()" style="background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer">✕</button>';
+      document.body.prepend(banner);setTimeout(()=>banner.remove(),12000);
     },3000);
   }
 }
@@ -1305,12 +1162,7 @@ function checkAutoBackup() {
 let toastTimer;
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.style.opacity='0',2600);}
 
-// Start app safely after DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
-}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
 </script>
 </body>
 </html>
