@@ -1414,9 +1414,12 @@ async function saveEditEntry() {
 }
 
 // Close modal on background click
-document.getElementById('editModal').addEventListener('click', function(e) {
-  if (e.target === this) closeEditModal();
-});
+const editModalEl = document.getElementById('editModal');
+if (editModalEl) {
+  editModalEl.addEventListener('click', function(e) {
+    if (e.target === this) closeEditModal();
+  });
+}
 
 let toastT;
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.style.opacity='1';clearTimeout(toastT);toastT=setTimeout(()=>t.style.opacity='0',2500);}
