@@ -55,7 +55,7 @@ input:focus,select:focus{border-color:var(--accent);background:#fff;}
 .add-btn{background:var(--accent);color:#fff;border:none;padding:0 16px;font-weight:700;font-size:.86rem;cursor:pointer;white-space:nowrap;}
 .add-btn:hover{background:#3a7ae0;}
 .stop-btn{background:var(--warn);color:#fff;border:none;padding:0 16px;font-weight:700;font-size:.86rem;cursor:pointer;}
-.timer-text{font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;font-size:1.05rem;font-weight:700;color:var(--accent2);letter-spacing:1px;white-space:nowrap;font-variant-numeric:tabular-nums;}
+.timer-text{font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-size:1.05rem;font-weight:700;color:var(--accent2);letter-spacing:1px;white-space:nowrap;font-variant-numeric:tabular-nums;}
 .proj-picker{position:absolute;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:200;width:min(380px,95vw);max-height:360px;display:flex;flex-direction:column;left:0;top:calc(100% + 4px);}
 .proj-picker-search{padding:10px 12px;border-bottom:1px solid var(--border);}
 .proj-picker-cats{padding:8px 12px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:4px;max-height:80px;overflow-y:auto;}
@@ -70,16 +70,16 @@ input:focus,select:focus{border-color:var(--accent);background:#fff;}
 .entries-header{padding:10px 14px;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;}
 .day-header{padding:7px 14px;background:#f8f9fc;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
 .day-label{font-size:.78rem;font-weight:600;color:var(--text2);}
-.day-total{font-size:.78rem;font-weight:700;color:var(--text2);font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;}
+.day-total{font-size:.78rem;font-weight:700;color:var(--text2);font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;}
 .entry-item{padding:10px 14px;border-bottom:1px solid #f5f7fa;display:flex;align-items:center;gap:10px;background:#fff;flex-wrap:wrap;}
 .entry-item:hover{background:#fafbff;}
 .entry-desc{flex:1;min-width:100px;font-size:.86rem;font-weight:500;color:var(--text);}
 .entry-proj{display:flex;align-items:center;gap:4px;font-size:.76rem;font-weight:600;max-width:180px;}
 .entry-proj-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .entry-time{font-size:.78rem;color:var(--text2);white-space:nowrap;}
-.entry-dur{font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;font-weight:700;font-size:.86rem;color:var(--text);min-width:50px;text-align:right;font-variant-numeric:tabular-nums;}
+.entry-dur{font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-weight:700;font-size:.86rem;color:var(--text);min-width:50px;text-align:right;font-variant-numeric:tabular-nums;}
 .entries-footer{padding:8px 14px;border-top:1px solid var(--border);background:var(--surface2);display:flex;gap:16px;flex-wrap:wrap;}
-.autocomplete-list{position:absolute;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:150;width:100%;max-height:200px;overflow-y:auto;left:0;top:100%;}
+.autocomplete-list{position:fixed;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.15);z-index:250;max-height:240px;overflow-y:auto;}
 .autocomplete-item{padding:9px 14px;cursor:pointer;font-size:.84rem;border-bottom:1px solid #f5f5f5;}
 .autocomplete-item:hover{background:#f0f6ff;}
 .autocomplete-item-desc{font-weight:500;color:var(--text);}
@@ -94,7 +94,7 @@ tfoot td{border-top:2px solid var(--border);font-weight:600!important;color:var(
 .badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:.7rem;font-weight:600;}
 .badge-blue{background:#dbeafe;color:#2563eb;}
 .stat{text-align:center;padding:6px;}
-.stat-val{font-size:1.2rem;font-weight:700;font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;font-variant-numeric:tabular-nums;}
+.stat-val{font-size:1.2rem;font-weight:700;font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-variant-numeric:tabular-nums;}
 .tabs{display:flex;gap:2px;background:var(--surface2);border-radius:8px;padding:3px;margin-bottom:16px;border:1px solid var(--border);flex-wrap:wrap;}
 .tab{flex:1;min-width:55px;text-align:center;padding:6px 3px;border-radius:6px;cursor:pointer;font-size:.78rem;font-weight:500;color:var(--text2);transition:all .18s;}
 .tab.active{background:#fff;color:var(--accent);box-shadow:var(--shadow);font-weight:700;}
@@ -228,7 +228,7 @@ tfoot td{border-top:2px solid var(--border);font-weight:600!important;color:var(
             <input type="time" id="manEnd" onchange="onManTimeChange()" style="border:none;background:transparent;font-size:.86rem;font-weight:600;color:var(--text);width:80px;padding:0">
           </div>
           <div class="entry-section" style="min-width:65px;justify-content:center;border-right:1px solid var(--border)">
-            <span id="manDur" style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;font-weight:700;font-size:.88rem;color:var(--accent2);font-variant-numeric:tabular-nums">-</span>
+            <span id="manDur" style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-weight:700;font-size:.88rem;color:var(--accent2);font-variant-numeric:tabular-nums">-</span>
           </div>
           <button class="add-btn" onclick="addManualEntry()">ADD</button>
         </div>
@@ -287,9 +287,9 @@ tfoot td{border-top:2px solid var(--border);font-weight:600!important;color:var(
         </div>
         <div id="empEntriesWrap"><div class="empty-state">No entries yet.</div></div>
         <div class="entries-footer">
-          <div><span style="font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Hours </span><span style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;font-weight:700;color:var(--accent2)" id="empTotalHours">0h</span></div>
-          <div><span style="font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Miles </span><span style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;font-weight:700;color:var(--accent)" id="empTotalMiles">0</span></div>
-          <div><span style="font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Days </span><span style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;font-weight:700;color:var(--purple)" id="empDaysWorked">0</span></div>
+          <div><span style="font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Hours </span><span style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-weight:700;color:var(--accent2)" id="empTotalHours">0h</span></div>
+          <div><span style="font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Miles </span><span style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-weight:700;color:var(--accent)" id="empTotalMiles">0</span></div>
+          <div><span style="font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Days </span><span style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-weight:700;color:var(--purple)" id="empDaysWorked">0</span></div>
         </div>
       </div>
     </div>
@@ -751,9 +751,15 @@ function signOutEmployee(){
 // AUTOCOMPLETE
 let acItems=[];
 function showAutocomplete(){
-  const q=(document.getElementById('manNotes')?.value||'').toLowerCase().trim();
+  const input=document.getElementById('manNotes');
+  const q=(input?.value||'').toLowerCase().trim();
   const list=document.getElementById('autocompleteList');
   if(!q||q.length<1){list.style.display='none';return;}
+  // Position the dropdown right below the input field using fixed coords
+  const rect=input.getBoundingClientRect();
+  list.style.left=rect.left+'px';
+  list.style.top=(rect.bottom+2)+'px';
+  list.style.width=Math.max(rect.width,260)+'px';
   const seen=new Set();
   // Match notes starting with query OR containing query as a word, plus fuzzy contains
   const myEntries=S.entries.filter(e=>e.employee_id===selEmpId&&e.end_ts&&e.notes);
@@ -1085,10 +1091,10 @@ function renderOverview(){
   const wrap=document.getElementById('overviewTable');
   if(!Object.keys(byEmp).length){wrap.innerHTML='<div class="empty-state">No entries for this period.</div>';return;}
   const tot=Object.values(byEmp).reduce((s,d)=>s+d.hours,0);
-  wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Hours</th><th>By Project</th></tr></thead><tbody>${Object.entries(byEmp).sort((a,b)=>a[0].localeCompare(b[0])).map(([n,d])=>`<tr><td style="font-weight:600;color:var(--text)">${n}</td><td style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;font-weight:600;color:var(--accent2)">${fmtDur(d.hours)}</td><td style="font-size:.76rem">${Object.entries(d.projs).map(([p,h])=>`<span class="badge badge-blue" style="margin:1px">${p.length>24?p.slice(0,24)+'...':p}: ${fmtDur(h)}</span>`).join(' ')}</td></tr>`).join('')}</tbody><tfoot><tr><td>TOTAL</td><td style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;color:var(--accent2)">${fmtDur(tot)}</td><td></td></tr></tfoot></table></div>`;
+  wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Hours</th><th>By Project</th></tr></thead><tbody>${Object.entries(byEmp).sort((a,b)=>a[0].localeCompare(b[0])).map(([n,d])=>`<tr><td style="font-weight:600;color:var(--text)">${n}</td><td style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-weight:600;color:var(--accent2)">${fmtDur(d.hours)}</td><td style="font-size:.76rem">${Object.entries(d.projs).map(([p,h])=>`<span class="badge badge-blue" style="margin:1px">${p.length>24?p.slice(0,24)+'...':p}: ${fmtDur(h)}</span>`).join(' ')}</td></tr>`).join('')}</tbody><tfoot><tr><td>TOTAL</td><td style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;color:var(--accent2)">${fmtDur(tot)}</td><td></td></tr></tfoot></table></div>`;
   const active=S.entries.filter(x=>!x.end_ts),aw=document.getElementById('activeClockins');
   if(!active.length){aw.innerHTML='<div class="empty-state">No one currently clocked in.</div>';return;}
-  aw.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Project</th><th>Category</th><th>Clocked In</th><th>Duration</th></tr></thead><tbody>${active.map(x=>`<tr><td><span class="dot dot-green"></span>${EN(x.employee_id)}</td><td style="max-width:180px;word-break:break-word">${PN(x.project_id)}</td><td>${catBadge(PC(x.project_id))}</td><td>${fmtT(x.start_ts)}</td><td style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif">${hhmm(Date.now()-new Date(x.start_ts).getTime())}</td></tr>`).join('')}</tbody></table></div>`;
+  aw.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Project</th><th>Category</th><th>Clocked In</th><th>Duration</th></tr></thead><tbody>${active.map(x=>`<tr><td><span class="dot dot-green"></span>${EN(x.employee_id)}</td><td style="max-width:180px;word-break:break-word">${PN(x.project_id)}</td><td>${catBadge(PC(x.project_id))}</td><td>${fmtT(x.start_ts)}</td><td style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif">${hhmm(Date.now()-new Date(x.start_ts).getTime())}</td></tr>`).join('')}</tbody></table></div>`;
 }
 function setPiePeriod(){const cp=periods()[curPeriodIdx()];document.getElementById('pieFrom').value=cp.start.toISOString().slice(0,10);document.getElementById('pieTo').value=cp.end.toISOString().slice(0,10);renderPie();}
 function setPieYear(){const y=new Date().getFullYear();document.getElementById('pieFrom').value=y+'-01-01';document.getElementById('pieTo').value=y+'-12-31';renderPie();}
@@ -1107,7 +1113,7 @@ function renderPie(){
     const x1=cx+r*Math.cos(ang),y1=cy+r*Math.sin(ang),x2=cx+r*Math.cos(ea),y2=cy+r*Math.sin(ea);
     const c=CAT_COLORS[name]||'#94a3b8';
     slices+=`<path d="M${cx},${cy} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${a>Math.PI?1:0},1 ${x2.toFixed(1)},${y2.toFixed(1)} Z" fill="${c}" stroke="#fff" stroke-width="2" opacity=".9"/>`;
-    legend+=`<div class="legend-item"><div class="legend-dot" style="background:${c}"></div><span style="flex:1;color:var(--text)">${name}</span><span style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;color:var(--accent2);font-weight:600">${fmtDur(hrs)}</span><span style="color:var(--text3);font-size:.76rem;margin-left:5px">${(pct*100).toFixed(0)}%</span></div>`;
+    legend+=`<div class="legend-item"><div class="legend-dot" style="background:${c}"></div><span style="flex:1;color:var(--text)">${name}</span><span style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;color:var(--accent2);font-weight:600">${fmtDur(hrs)}</span><span style="color:var(--text3);font-size:.76rem;margin-left:5px">${(pct*100).toFixed(0)}%</span></div>`;
     ang=ea;
   });
   document.getElementById('pieWrap').innerHTML=`<div class="pie-wrap"><div style="flex-shrink:0"><svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${slices}</svg><div style="text-align:center;margin-top:6px;font-size:.8rem;color:var(--text2)">Total: <strong>${fmtDur(total)}</strong></div></div><div style="flex:1;min-width:160px">${legend}</div></div>`;
@@ -1120,7 +1126,7 @@ function renderEmpHrs(){
   const byEmp={};entries.forEach(e=>{const n=EN(e.employee_id);if(!byEmp[n])byEmp[n]={hours:0,days:new Set(),entries:0};byEmp[n].hours+=e.hours||0;byEmp[n].days.add(e.date);byEmp[n].entries++;});
   const maxH=Math.max(...Object.values(byEmp).map(d=>d.hours));
   const rows=Object.entries(byEmp).sort((a,b)=>b[1].hours-a[1].hours);
-  document.getElementById('empHrsWrap').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Hours</th><th>Days</th><th>Entries</th><th style="min-width:140px">Visual</th></tr></thead><tbody>${rows.map(([n,d])=>{const pct=maxH>0?(d.hours/maxH)*100:0;return`<tr><td style="font-weight:600;color:var(--text)">${n}</td><td style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;color:var(--accent2);font-weight:600">${fmtDur(d.hours)}</td><td>${d.days.size}</td><td>${d.entries}</td><td><div style="display:flex;align-items:center;gap:7px"><div style="flex:1;height:7px;background:var(--surface2);border-radius:4px;overflow:hidden;border:1px solid var(--border)"><div style="width:${pct}%;height:100%;background:var(--accent);border-radius:4px"></div></div><span style="font-size:.73rem;color:var(--text3);white-space:nowrap">${fmtDur(d.hours)}</span></div></td></tr>`;}).join('')}</tbody><tfoot><tr><td>TOTAL</td><td style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;color:var(--accent2)">${fmtDur(rows.reduce((s,[,d])=>s+d.hours,0))}</td><td></td><td></td><td></td></tr></tfoot></table></div>`;
+  document.getElementById('empHrsWrap').innerHTML=`<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Hours</th><th>Days</th><th>Entries</th><th style="min-width:140px">Visual</th></tr></thead><tbody>${rows.map(([n,d])=>{const pct=maxH>0?(d.hours/maxH)*100:0;return`<tr><td style="font-weight:600;color:var(--text)">${n}</td><td style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;color:var(--accent2);font-weight:600">${fmtDur(d.hours)}</td><td>${d.days.size}</td><td>${d.entries}</td><td><div style="display:flex;align-items:center;gap:7px"><div style="flex:1;height:7px;background:var(--surface2);border-radius:4px;overflow:hidden;border:1px solid var(--border)"><div style="width:${pct}%;height:100%;background:var(--accent);border-radius:4px"></div></div><span style="font-size:.73rem;color:var(--text3);white-space:nowrap">${fmtDur(d.hours)}</span></div></td></tr>`;}).join('')}</tbody><tfoot><tr><td>TOTAL</td><td style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;color:var(--accent2)">${fmtDur(rows.reduce((s,[,d])=>s+d.hours,0))}</td><td></td><td></td><td></td></tr></tfoot></table></div>`;
 }
 function populateYears(){
   const yrs=[...new Set(S.entries.map(e=>e.date?.slice(0,4)).filter(Boolean))].sort().reverse();
@@ -1137,7 +1143,7 @@ function renderAvg(){
   const maxA=Math.max(...rows.map(([,d])=>d.projs.size>0?d.total/d.projs.size:0));
   const wrap=document.getElementById('avgWrap');
   if(!rows.length){wrap.innerHTML='<div class="empty-state">No data.</div>';return;}
-  wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Category</th><th>Events</th><th>Total</th><th>Avg/Event</th><th style="min-width:130px">Visual</th></tr></thead><tbody>${rows.map(([cn,d])=>{const avg=d.projs.size>0?d.total/d.projs.size:0;const bp=maxA>0?(avg/maxA)*100:0;const c=d.cat?(d.cat.color||CAT_COLORS[cn]||'#64748b'):'#9ba3c0';return`<tr><td>${cn==='Untagged'?'<span style="color:var(--text3)">Untagged</span>':`<span style="background:${c}22;color:${c};border:1px solid ${c}44;padding:2px 8px;border-radius:8px;font-size:.74rem;font-weight:600">${cn}</span>`}</td><td>${d.projs.size}</td><td style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;color:var(--accent2)">${fmtDur(d.total)}</td><td><span style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;font-weight:700;color:var(--accent)">${fmtDur(avg)}</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="flex:1;height:7px;background:var(--surface2);border-radius:4px;overflow:hidden;border:1px solid var(--border)"><div style="width:${bp}%;height:100%;background:${c};border-radius:4px"></div></div><span style="font-size:.73rem;color:var(--text3)">${fmtDur(avg)}</span></div></td></tr>`;}).join('')}</tbody></table></div>`;
+  wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Category</th><th>Events</th><th>Total</th><th>Avg/Event</th><th style="min-width:130px">Visual</th></tr></thead><tbody>${rows.map(([cn,d])=>{const avg=d.projs.size>0?d.total/d.projs.size:0;const bp=maxA>0?(avg/maxA)*100:0;const c=d.cat?(d.cat.color||CAT_COLORS[cn]||'#64748b'):'#9ba3c0';return`<tr><td>${cn==='Untagged'?'<span style="color:var(--text3)">Untagged</span>':`<span style="background:${c}22;color:${c};border:1px solid ${c}44;padding:2px 8px;border-radius:8px;font-size:.74rem;font-weight:600">${cn}</span>`}</td><td>${d.projs.size}</td><td style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;color:var(--accent2)">${fmtDur(d.total)}</td><td><span style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-weight:700;color:var(--accent)">${fmtDur(avg)}</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="flex:1;height:7px;background:var(--surface2);border-radius:4px;overflow:hidden;border:1px solid var(--border)"><div style="width:${bp}%;height:100%;background:${c};border-radius:4px"></div></div><span style="font-size:.73rem;color:var(--text3)">${fmtDur(avg)}</span></div></td></tr>`;}).join('')}</tbody></table></div>`;
 }
 function renderProfit(){
   const q=(document.getElementById('profSearch')?.value||'').toLowerCase(),cf=document.getElementById('profCat')?.value||'',yr=document.getElementById('profYear')?.value||'',sb=document.getElementById('profSort')?.value||'hours';
@@ -1147,7 +1153,7 @@ function renderProfit(){
   if(sb==='hours')rows.sort((a,b)=>b[1].hours-a[1].hours);else if(sb==='name')rows.sort((a,b)=>PN(parseInt(a[0])).localeCompare(PN(parseInt(b[0]))));else rows.sort((a,b)=>Math.max(...b[1].dates.map(d=>new Date(d)))-Math.max(...a[1].dates.map(d=>new Date(d))));
   const wrap=document.getElementById('profitTable');
   if(!rows.length){wrap.innerHTML='<div class="empty-state">No projects.</div>';return;}
-  wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Project</th><th>Cat</th><th>Hours</th><th>Staff</th><th>Last</th><th>Rate</th><th>Earned</th></tr></thead><tbody>${rows.map(([ps,d])=>{const pid=parseInt(ps),pn=PN(pid),proj=S.projects.find(p=>p.id===pid),cat=PC(pid),rate=proj?.hourly_rate||0,earned=rate?(d.hours*rate).toFixed(2):'&mdash;',last=d.dates.sort().reverse()[0];return`<tr><td style="font-weight:500;color:var(--text)"><div style="word-break:break-word;min-width:120px">${pn}</div></td><td>${catBadge(cat)}</td><td style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;color:var(--accent2);font-weight:600;white-space:nowrap">${fmtDur(d.hours)}</td><td>${d.emps.size}</td><td style="font-size:.77rem;white-space:nowrap">${fmt(last)}</td><td style="white-space:nowrap;color:${rate?'var(--accent2)':'var(--text3)'}">${rate?'$'+rate+'/hr':'&mdash;'}</td><td style="white-space:nowrap;color:var(--accent2)">${earned!=='&mdash;'?'$'+Number(earned).toLocaleString():earned}</td></tr>`;}).join('')}</tbody></table></div>`;
+  wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Project</th><th>Cat</th><th>Hours</th><th>Staff</th><th>Last</th><th>Rate</th><th>Earned</th></tr></thead><tbody>${rows.map(([ps,d])=>{const pid=parseInt(ps),pn=PN(pid),proj=S.projects.find(p=>p.id===pid),cat=PC(pid),rate=proj?.hourly_rate||0,earned=rate?(d.hours*rate).toFixed(2):'&mdash;',last=d.dates.sort().reverse()[0];return`<tr><td style="font-weight:500;color:var(--text)"><div style="word-break:break-word;min-width:120px">${pn}</div></td><td>${catBadge(cat)}</td><td style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;color:var(--accent2);font-weight:600;white-space:nowrap">${fmtDur(d.hours)}</td><td>${d.emps.size}</td><td style="font-size:.77rem;white-space:nowrap">${fmt(last)}</td><td style="white-space:nowrap;color:${rate?'var(--accent2)':'var(--text3)'}">${rate?'$'+rate+'/hr':'&mdash;'}</td><td style="white-space:nowrap;color:var(--accent2)">${earned!=='&mdash;'?'$'+Number(earned).toLocaleString():earned}</td></tr>`;}).join('')}</tbody></table></div>`;
   const rw=S.projects.filter(p=>p.hourly_rate>0);
   document.getElementById('ratesList').innerHTML=rw.length?`<div class="table-wrap mb8"><table><thead><tr><th>Project</th><th>$/hr</th><th>Budget</th><th></th></tr></thead><tbody>${rw.map(p=>`<tr><td style="color:var(--text);word-break:break-word">${p.name}</td><td style="color:var(--accent2)">$${p.hourly_rate}</td><td>${p.budget?'$'+p.budget:'&mdash;'}</td><td><button class="delete-btn" onclick="removeRate(${p.id})">&#10005;</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="text-sm mb8">No rates set yet.</div>';
   if(document.getElementById('rateProj'))document.getElementById('rateProj').innerHTML=S.projects.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
@@ -1168,7 +1174,7 @@ function renderAllEntries(){
   document.getElementById('entryCount').textContent=`Showing ${Math.min(PSIZE,entries.length)} of ${entries.length.toLocaleString()} entries`;
   const page=entries.slice(ePage*PSIZE,(ePage+1)*PSIZE),wrap=document.getElementById('allEntriesWrap');
   if(!page.length){wrap.innerHTML='<div class="empty-state">No entries found.</div>';return;}
-  wrap.innerHTML=`<table><thead><tr><th>Date</th><th>Employee</th><th>In</th><th>Out</th><th>Project</th><th>Cat</th><th>Hours</th><th>Notes</th><th></th></tr></thead><tbody>${page.map(e=>`<tr><td style="white-space:nowrap">${fmt(e.date)}</td><td style="font-weight:500;color:var(--text);white-space:nowrap">${EN(e.employee_id)}</td><td style="white-space:nowrap">${fmtT(e.start_ts)}</td><td style="white-space:nowrap">${fmtT(e.end_ts)}</td><td class="proj-cell">${PN(e.project_id)}</td><td>${catBadge(PC(e.project_id))}</td><td style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;color:var(--accent2);white-space:nowrap">${fmtDur(e.hours)}</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.notes||''}</td><td><button class="delete-btn" onclick="mgrDelEntry(${e.id})">&#10005;</button></td></tr>`).join('')}</tbody></table>`;
+  wrap.innerHTML=`<table><thead><tr><th>Date</th><th>Employee</th><th>In</th><th>Out</th><th>Project</th><th>Cat</th><th>Hours</th><th>Notes</th><th></th></tr></thead><tbody>${page.map(e=>`<tr><td style="white-space:nowrap">${fmt(e.date)}</td><td style="font-weight:500;color:var(--text);white-space:nowrap">${EN(e.employee_id)}</td><td style="white-space:nowrap">${fmtT(e.start_ts)}</td><td style="white-space:nowrap">${fmtT(e.end_ts)}</td><td class="proj-cell">${PN(e.project_id)}</td><td>${catBadge(PC(e.project_id))}</td><td style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;color:var(--accent2);white-space:nowrap">${fmtDur(e.hours)}</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.notes||''}</td><td><button class="delete-btn" onclick="mgrDelEntry(${e.id})">&#10005;</button></td></tr>`).join('')}</tbody></table>`;
   const tp=Math.ceil(entries.length/PSIZE);
   document.getElementById('entryPag').innerHTML=tp>1?`<button class="btn btn-ghost btn-sm" onclick="ePage=Math.max(0,ePage-1);renderAllEntries()" ${ePage===0?'disabled':''}>&#8592; Prev</button> <span class="text-sm">Page ${ePage+1} of ${tp}</span> <button class="btn btn-ghost btn-sm" onclick="ePage=Math.min(${tp-1},ePage+1);renderAllEntries()" ${ePage>=tp-1?'disabled':''}>Next &#8594;</button>`:'';
 }
@@ -1181,7 +1187,7 @@ function renderMileage(){
   miles.sort((a,b)=>b.date.localeCompare(a.date));
   const wrap=document.getElementById('mileWrap');
   if(!miles.length){wrap.innerHTML='<div class="empty-state">No mileage entries.</div>';return;}
-  wrap.innerHTML=`<table><thead><tr><th>Date</th><th>Employee</th><th>Miles</th><th>Purpose</th><th></th></tr></thead><tbody>${miles.map(m=>`<tr><td style="white-space:nowrap">${fmt(m.date)}</td><td style="font-weight:500;color:var(--text)">${EN(m.employee_id)}</td><td style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;color:var(--accent2)">${m.miles.toFixed(1)}</td><td>${m.purpose||''}</td><td><button class="delete-btn" onclick="delMile(${m.id})">&#10005;</button></td></tr>`).join('')}</tbody><tfoot><tr><td colspan="2">TOTAL</td><td style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;color:var(--accent2)">${miles.reduce((s,m)=>s+m.miles,0).toFixed(1)}</td><td colspan="2"></td></tr></tfoot></table>`;
+  wrap.innerHTML=`<table><thead><tr><th>Date</th><th>Employee</th><th>Miles</th><th>Purpose</th><th></th></tr></thead><tbody>${miles.map(m=>`<tr><td style="white-space:nowrap">${fmt(m.date)}</td><td style="font-weight:500;color:var(--text)">${EN(m.employee_id)}</td><td style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;color:var(--accent2)">${m.miles.toFixed(1)}</td><td>${m.purpose||''}</td><td><button class="delete-btn" onclick="delMile(${m.id})">&#10005;</button></td></tr>`).join('')}</tbody><tfoot><tr><td colspan="2">TOTAL</td><td style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;color:var(--accent2)">${miles.reduce((s,m)=>s+m.miles,0).toFixed(1)}</td><td colspan="2"></td></tr></tfoot></table>`;
 }
 function clearMileF(){['fMileFrom','fMileTo','fMileEmp'].forEach(id=>document.getElementById(id).value='');renderMileage();}
 async function delMile(id){if(!confirm('Delete?'))return;await db.del('mileage','id=eq.'+id);S.mileage=S.mileage.filter(m=>m.id!==id);renderMileage();toast('Deleted.');}
@@ -1296,7 +1302,7 @@ function renderExpPreview(){
   if(!entries.length&&!miles.length){wrap.innerHTML='<div class="empty-state">No data.</div>';return;}
   const byEmp={};entries.forEach(e=>{const n=EN(e.employee_id);if(!byEmp[n])byEmp[n]={hours:0,cnt:0,miles:0};byEmp[n].hours+=e.hours||0;byEmp[n].cnt++;});
   miles.forEach(m=>{const n=EN(m.employee_id);if(!byEmp[n])byEmp[n]={hours:0,cnt:0,miles:0};byEmp[n].miles+=m.miles;});
-  wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Total Hours</th><th>Hours (decimal)</th><th>Total Miles</th><th>Entries</th></tr></thead><tbody>${Object.entries(byEmp).sort((a,b)=>a[0].localeCompare(b[0])).map(([n,d])=>`<tr><td style="font-weight:500;color:var(--text)">${n}</td><td style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;color:var(--accent2)">${fmtDur(d.hours)}</td><td style="font-family:'SF Mono','Menlo','Consolas','Helvetica Neue',sans-serif;color:var(--text2)">${d.hours.toFixed(2)}</td><td>${d.miles.toFixed(1)}</td><td>${d.cnt}</td></tr>`).join('')}</tbody></table></div>`;
+  wrap.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Total Hours</th><th>Hours (decimal)</th><th>Total Miles</th><th>Entries</th></tr></thead><tbody>${Object.entries(byEmp).sort((a,b)=>a[0].localeCompare(b[0])).map(([n,d])=>`<tr><td style="font-weight:500;color:var(--text)">${n}</td><td style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;color:var(--accent2)">${fmtDur(d.hours)}</td><td style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;color:var(--text2)">${d.hours.toFixed(2)}</td><td>${d.miles.toFixed(1)}</td><td>${d.cnt}</td></tr>`).join('')}</tbody></table></div>`;
 }
 function buildExpData(entries,miles,label){
   entries.sort((a,b)=>EN(a.employee_id).localeCompare(EN(b.employee_id))||new Date(a.start_ts)-new Date(b.start_ts));
