@@ -231,10 +231,35 @@ tfoot td{border-top:2px solid var(--border);font-weight:600!important;color:var(
           <div class="entry-section" style="gap:4px">
             <input type="date" id="manDate" style="border:none;background:transparent;font-size:.8rem;color:var(--text2);width:120px;padding:0" onchange="onManTimeChange()">
           </div>
-          <div class="entry-section" style="gap:4px">
-            <input type="text" id="manStart" placeholder="8:00 AM" onchange="onManTimeChange()" oninput="onManTimeChange()" style="border:none;background:transparent;font-size:.88rem;font-weight:600;color:var(--text);width:85px;padding:0" autocomplete="off">
-            <span style="color:var(--text3)">-</span>
-            <input type="text" id="manEnd" placeholder="5:00 PM" onchange="onManTimeChange()" oninput="onManTimeChange()" style="border:none;background:transparent;font-size:.88rem;font-weight:600;color:var(--text);width:85px;padding:0" autocomplete="off">
+          <div class="entry-section" style="gap:2px;padding:0 8px">
+            <div style="display:flex;align-items:center;gap:2px">
+              <input type="text" id="manStartHH" maxlength="2" placeholder="08" tabindex="1"
+                style="border:none;border-bottom:2px solid var(--border);background:transparent;font-size:.92rem;font-weight:700;color:var(--text);width:28px;padding:2px 0;text-align:center;outline:none"
+                oninput="timeDigit(this,'manStartMM')" onfocus="this.select()">
+              <span style="font-weight:700;color:var(--text3)">:</span>
+              <input type="text" id="manStartMM" maxlength="2" placeholder="00" tabindex="2"
+                style="border:none;border-bottom:2px solid var(--border);background:transparent;font-size:.92rem;font-weight:700;color:var(--text);width:28px;padding:2px 0;text-align:center;outline:none"
+                oninput="timeDigit(this,'manStartAP')" onfocus="this.select()">
+              <select id="manStartAP" tabindex="3" onchange="syncManTimes()"
+                style="border:none;border-bottom:2px solid var(--border);background:transparent;font-size:.85rem;font-weight:700;color:var(--accent);padding:2px 2px;outline:none;cursor:pointer;margin-left:2px">
+                <option>AM</option><option>PM</option>
+              </select>
+            </div>
+            <span style="color:var(--text3);margin:0 6px;font-weight:600">-</span>
+            <div style="display:flex;align-items:center;gap:2px">
+              <input type="text" id="manEndHH" maxlength="2" placeholder="05" tabindex="4"
+                style="border:none;border-bottom:2px solid var(--border);background:transparent;font-size:.92rem;font-weight:700;color:var(--text);width:28px;padding:2px 0;text-align:center;outline:none"
+                oninput="timeDigit(this,'manEndMM')" onfocus="this.select()">
+              <span style="font-weight:700;color:var(--text3)">:</span>
+              <input type="text" id="manEndMM" maxlength="2" placeholder="00" tabindex="5"
+                style="border:none;border-bottom:2px solid var(--border);background:transparent;font-size:.92rem;font-weight:700;color:var(--text);width:28px;padding:2px 0;text-align:center;outline:none"
+                oninput="timeDigit(this,'manEndAP')" onfocus="this.select()">
+              <select id="manEndAP" tabindex="6" onchange="syncManTimes()"
+                style="border:none;border-bottom:2px solid var(--border);background:transparent;font-size:.85rem;font-weight:700;color:var(--accent);padding:2px 2px;outline:none;cursor:pointer;margin-left:2px">
+                <option>AM</option><option>PM</option>
+              </select>
+            </div>
+            <input type="hidden" id="manStart"><input type="hidden" id="manEnd">
           </div>
           <div class="entry-section" style="min-width:65pxe="min-width:65px;justify-content:center;border-right:1px solid var(--border)">
             <span id="manDur" style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-weight:700;font-size:.88rem;color:var(--accent2);font-variant-numeric:tabular-nums">-</span>
@@ -894,8 +919,8 @@ function setMode(m){
 function checkOverlap(){
   updateDur();
   const date=document.getElementById('manDate').value;
-  const start=parseTimeInput(document.getElementById('manStart').value||'');
-  const end=parseTimeInput(document.getElementById('manEnd').value||'');
+  const start=document.getElementById('manStart').value||'';
+  const end=document.getElementById('manEnd').value||'';
   const warn=document.getElementById('overlapWarn'),det=document.getElementById('overlapDetail');
   if(!warn)return;
   if(!date||!start||!end||!selEmpId){warn.style.display='none';return;}
@@ -909,54 +934,79 @@ function checkOverlap(){
     if(det)det.textContent=`Conflicts with "${PN(ov.project_id)}" from ${os.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})} to ${oe.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}`;
   }else warn.style.display='none';
 }
-function parseTimeInput(val){
-  if(!val)return'';
-  val=val.trim().toUpperCase();
-  // Handle "8:00 AM" or "8:00PM" format
-  const ampmMatch=val.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/);
-  if(ampmMatch){
-    let h=parseInt(ampmMatch[1]),m=ampmMatch[2],ampm=ampmMatch[3];
-    if(ampm==='AM'&&h===12)h=0;
-    if(ampm==='PM'&&h!==12)h+=12;
-    return String(h).padStart(2,'0')+':'+m;
+function timeDigit(el, nextId){
+  // Auto-advance to next field when 2 digits entered
+  if(el.value.length>=2){
+    const next=document.getElementById(nextId);
+    if(next){next.focus();if(next.tagName==='INPUT')next.select();}
   }
-  // Handle "8:00" or "13:00" 24hr format
-  const hrMatch=val.match(/^(\d{1,2}):(\d{2})$/);
-  if(hrMatch)return String(parseInt(hrMatch[1])).padStart(2,'0')+':'+hrMatch[2];
-  // Handle "800" or "1300"
-  const numMatch=val.match(/^(\d{1,2})(\d{2})$/);
-  if(numMatch)return String(parseInt(numMatch[1])).padStart(2,'0')+':'+numMatch[2];
-  return'';
-}
-function getTimeStr(prefix){
-  const el=document.getElementById(prefix);
-  return el?parseTimeInput(el.value):'';
-}
-function setTimeSelectors(prefix,timeStr){
-  const el=document.getElementById(prefix);
-  if(!el||!timeStr)return;
-  // Convert 24hr to 12hr display
-  const [hStr,mStr]=timeStr.split(':');
-  let h=parseInt(hStr);
-  const ampm=h>=12?'PM':'AM';
-  const h12=h%12||12;
-  el.value=h12+':'+mStr+' '+ampm;
-}
-function initTimeSelectors(){}
-function syncHiddenTime(){}
-function initTimeSelectors_old(){
-  // Populate hour and minute dropdowns
-  ['manStartH','manEndH'].forEach(id=>{
-    const el=document.getElementById(id);if(!el)return;
-    el.innerHTML=Array.from({length:12},(_,i)=>`<option value="${String(i+1).padStart(2,'0')}">${String(i+1).padStart(2,'0')}</option>`).join('');
-  });
-  ['manStartM','manEndM'].forEach(id=>{
-    const el=document.getElementById(id);if(!el)return;
-    el.innerHTML=Array.from({length:12},(_,i)=>`<option value="${String(i*5).padStart(2,'0')}">${String(i*5).padStart(2,'0')}</option>`).join('');
-  });
+  syncManTimes();
 }
 
-function syncHiddenTime(prefix){
+function syncManTimes(){
+  // Build HH:MM 24hr strings from the split inputs
+  const sH=document.getElementById('manStartHH')?.value.padStart(2,'0');
+  const sM=document.getElementById('manStartMM')?.value.padStart(2,'0');
+  const sAP=document.getElementById('manStartAP')?.value;
+  const eH=document.getElementById('manEndHH')?.value.padStart(2,'0');
+  const eM=document.getElementById('manEndMM')?.value.padStart(2,'0');
+  const eAP=document.getElementById('manEndAP')?.value;
+
+  function to24(h,m,ap){
+    if(!h||!m||!ap)return'';
+    let hr=parseInt(h);if(isNaN(hr))return'';
+    if(ap==='AM'&&hr===12)hr=0;
+    if(ap==='PM'&&hr!==12)hr+=12;
+    return String(hr).padStart(2,'0')+':'+m.padStart(2,'0');
+  }
+  const startStr=to24(sH,sM,sAP);
+  const endStr=to24(eH,eM,eAP);
+  const sEl=document.getElementById('manStart');
+  const eEl=document.getElementById('manEnd');
+  if(sEl)sEl.value=startStr;
+  if(eEl)eEl.value=endStr;
+  updateDur();checkOverlap();
+}
+
+function setTimeSelectors(prefix, timeStr){
+  if(!timeStr)return;
+  const [hStr,mStr]=timeStr.split(':');
+  let h=parseInt(hStr),m=parseInt(mStr)||0;
+  const ap=h>=12?'PM':'AM';
+  const h12=h%12||12;
+  if(prefix==='manStart'){
+    const hEl=document.getElementById('manStartHH');
+    const mEl=document.getElementById('manStartMM');
+    const aEl=document.getElementById('manStartAP');
+    if(hEl)hEl.value=String(h12).padStart(2,'0');
+    if(mEl)mEl.value=String(m).padStart(2,'0');
+    if(aEl)aEl.value=ap;
+  } else {
+    const hEl=document.getElementById('manEndHH');
+    const mEl=document.getElementById('manEndMM');
+    const aEl=document.getElementById('manEndAP');
+    if(hEl)hEl.value=String(h12).padStart(2,'0');
+    if(mEl)mEl.value=String(m).padStart(2,'0');
+    if(aEl)aEl.value=ap;
+  }
+  syncManTimes();
+}
+
+function getTimeStr(prefix){
+  return document.getElementById(prefix)?.value||'';
+}
+
+function parseTimeInput(val){
+  if(!val)return'';
+  const m=val.match(/^(\d{1,2}):(\d{2})$/);
+  if(m)return String(parseInt(m[1])).padStart(2,'0')+':'+m[2];
+  return'';
+}
+
+function initTimeSelectors(){}
+function syncHiddenTime(){}
+
+function syncHiddenTime_unused(prefix){
   const h=document.getElementById(prefix+'H')?.value;
   const m=document.getElementById(prefix+'M')?.value;
   const ampm=document.getElementById(prefix+'AMPM')?.value;
@@ -1004,8 +1054,8 @@ function getTimeStr(prefix){
 
 function updateDur(){
   const date=document.getElementById('manDate')?.value,el=document.getElementById('manDur');if(!el)return;
-  const startStr=parseTimeInput(document.getElementById('manStart')?.value||'');
-  const endStr=parseTimeInput(document.getElementById('manEnd')?.value||'');
+  const startStr=document.getElementById('manStart')?.value||'';
+  const endStr=document.getElementById('manEnd')?.value||'';
   if(!startStr||!endStr||!date){el.textContent='-';return;}
   const sMs=new Date(`${date}T${startStr}`).getTime(),eMs=new Date(`${date}T${endStr}`).getTime();
   if(eMs<=sMs){el.textContent='-';return;}el.textContent=fmtDurMs(eMs-sMs);
@@ -1048,11 +1098,10 @@ function startTimer(){clearInterval(timerInt);timerInt=setInterval(()=>{document
 function stopTimer(){clearInterval(timerInt);timerInt=null;document.getElementById('timerDisplay').textContent='00:00:00';}
 
 async function addManualEntry(){
+  syncManTimes();
   const date=document.getElementById('manDate').value;
-  const startRaw=document.getElementById('manStart').value;
-  const endRaw=document.getElementById('manEnd').value;
-  const start=parseTimeInput(startRaw);
-  const end=parseTimeInput(endRaw);
+  const start=document.getElementById('manStart').value;
+  const end=document.getElementById('manEnd').value;
   const projId=parseInt(document.getElementById('manProject').value),notes=document.getElementById('manNotes').value;
   if(!date||!start||!end){toast('Please fill in date, start time (e.g. 8:00 AM), and end time.');return;}
   if(!projId){toast('Please select a project.');return;}
@@ -1087,9 +1136,10 @@ async function addManualEntry(){
     const [e]=await db.post('time_entries',[{employee_id:selEmpId,project_id:projId,date,start_ts:new Date(`${date}T${start}`).toISOString(),end_ts:new Date(`${date}T${end}`).toISOString(),hours,notes,billable:true}]);
     S.entries.push(e);
     // Advance start to end time of last entry
-    const prevEndRaw=document.getElementById('manEnd').value;
-    const prevEnd=parseTimeInput(prevEndRaw);
-    if(prevEnd){setTimeSelectors('manStart',prevEnd);}
+    const prevEnd=document.getElementById('manEnd').value;
+    if(prevEnd)setTimeSelectors('manStart',prevEnd);
+    document.getElementById('manEndHH').value='';
+    document.getElementById('manEndMM').value='';
     document.getElementById('manEnd').value='';
     document.getElementById('manNotes').value='';
     document.getElementById('manDur').textContent='-';document.getElementById('overlapWarn').style.display='none';
