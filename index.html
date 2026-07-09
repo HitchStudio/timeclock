@@ -240,10 +240,9 @@ tfoot td{border-top:2px solid var(--border);font-weight:600!important;color:var(
               <input type="text" id="manStartMM" maxlength="2" placeholder="00" tabindex="2"
                 style="border:none;border-bottom:2px solid var(--border);background:transparent;font-size:.92rem;font-weight:700;color:var(--text);width:28px;padding:2px 0;text-align:center;outline:none"
                 oninput="timeDigit(this,'manStartAP')" onfocus="this.select()">
-              <select id="manStartAP" tabindex="3" onchange="syncManTimes()"
-                style="border:none;border-bottom:2px solid var(--border);background:transparent;font-size:.85rem;font-weight:700;color:var(--accent);padding:2px 2px;outline:none;cursor:pointer;margin-left:2px">
-                <option>AM</option><option>PM</option>
-              </select>
+              <input type="text" id="manStartAP" value="AM" tabindex="3" maxlength="2" readonly
+                onclick="toggleAMPM(this)" onkeydown="ampmKey(event,this,'manEndHH')"
+                style="border:none;border-bottom:2px solid var(--border);background:transparent;font-size:.85rem;font-weight:700;color:var(--accent);width:28px;padding:2px 0;text-align:center;outline:none;cursor:pointer;caret-color:transparent">
             </div>
             <span style="color:var(--text3);margin:0 6px;font-weight:600">-</span>
             <div style="display:flex;align-items:center;gap:2px">
@@ -254,10 +253,9 @@ tfoot td{border-top:2px solid var(--border);font-weight:600!important;color:var(
               <input type="text" id="manEndMM" maxlength="2" placeholder="00" tabindex="5"
                 style="border:none;border-bottom:2px solid var(--border);background:transparent;font-size:.92rem;font-weight:700;color:var(--text);width:28px;padding:2px 0;text-align:center;outline:none"
                 oninput="timeDigit(this,'manEndAP')" onfocus="this.select()">
-              <select id="manEndAP" tabindex="6" onchange="syncManTimes()"
-                style="border:none;border-bottom:2px solid var(--border);background:transparent;font-size:.85rem;font-weight:700;color:var(--accent);padding:2px 2px;outline:none;cursor:pointer;margin-left:2px">
-                <option>AM</option><option>PM</option>
-              </select>
+              <input type="text" id="manEndAP" value="PM" tabindex="6" maxlength="2" readonly
+                onclick="toggleAMPM(this)" onkeydown="ampmKey(event,this,'manNotes')"
+                style="border:none;border-bottom:2px solid var(--border);background:transparent;font-size:.85rem;font-weight:700;color:var(--accent);width:28px;padding:2px 0;text-align:center;outline:none;cursor:pointer;caret-color:transparent">
             </div>
             <input type="hidden" id="manStart"><input type="hidden" id="manEnd">
           </div>
@@ -790,6 +788,7 @@ function prefillLastEntry(){
     if(ed.toISOString().slice(0,10)===today()){
       const timeStr=String(ed.getHours()).padStart(2,'0')+':'+String(ed.getMinutes()).padStart(2,'0');
       setTimeSelectors('manStart',timeStr);
+      syncManTimes();
     }
   }
 }
@@ -943,6 +942,27 @@ function timeDigit(el, nextId){
   syncManTimes();
 }
 
+function toggleAMPM(el){
+  el.value=el.value==='AM'?'PM':'AM';
+  syncManTimes();
+}
+function ampmKey(e,el,nextId){
+  if(e.key==='Tab'||e.key===' '||e.key==='Enter'){
+    e.preventDefault();
+    if(e.key===' '||e.key==='Enter'){
+      el.value=el.value==='AM'?'PM':'AM';
+      syncManTimes();
+    } else {
+      // Tab - move to next field
+      const next=document.getElementById(nextId);
+      if(next){next.focus();if(next.select)next.select();}
+    }
+  } else if(e.key==='a'||e.key==='A'){
+    el.value='AM';syncManTimes();
+  } else if(e.key==='p'||e.key==='P'){
+    el.value='PM';syncManTimes();
+  }
+}
 function syncManTimes(){
   // Build HH:MM 24hr strings from the split inputs
   const sH=document.getElementById('manStartHH')?.value.padStart(2,'0');
@@ -1137,7 +1157,10 @@ async function addManualEntry(){
     S.entries.push(e);
     // Advance start to end time of last entry
     const prevEnd=document.getElementById('manEnd').value;
-    if(prevEnd)setTimeSelectors('manStart',prevEnd);
+    if(prevEnd){
+      setTimeSelectors('manStart',prevEnd);
+      syncManTimes();
+    }
     document.getElementById('manEndHH').value='';
     document.getElementById('manEndMM').value='';
     document.getElementById('manEnd').value='';
