@@ -332,6 +332,23 @@ tfoot td{border-top:2px solid var(--border);font-weight:600!important;color:var(
           &#9888; <strong>Time overlap detected!</strong>
         </div>
         <div id="empEntriesWrap"><div class="empty-state">No entries yet.</div></div>
+        <div id="empWeekBars" style="padding:10px 14px;border-top:1px solid var(--border);display:none">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;min-width:52px">Week 1</span>
+            <div style="flex:1;height:10px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;overflow:hidden"><div id="empW1Bar" style="height:100%;background:var(--accent);border-radius:5px;width:0%"></div></div>
+            <span id="empW1Total" style="font-family:system-ui;font-weight:700;color:var(--accent);font-size:.82rem;min-width:60px;text-align:right">0h</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <span style="font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;min-width:52px">Week 2</span>
+            <div style="flex:1;height:10px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;overflow:hidden"><div id="empW2Bar" style="height:100%;background:var(--purple);border-radius:5px;width:0%"></div></div>
+            <span id="empW2Total" style="font-family:system-ui;font-weight:700;color:var(--purple);font-size:.82rem;min-width:60px;text-align:right">0h</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px;min-width:52px">2-Week</span>
+            <div style="flex:1;height:10px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;overflow:hidden"><div id="empPdBar" style="height:100%;background:var(--accent2);border-radius:5px;width:0%"></div></div>
+            <span id="empPdTotal" style="font-family:system-ui;font-weight:700;color:var(--accent2);font-size:.82rem;min-width:60px;text-align:right">0h</span>
+          </div>
+        </div>
         <div class="entries-footer">
           <div><span style="font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Hours </span><span style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-weight:700;color:var(--accent2)" id="empTotalHours">0h</span></div>
           <div><span style="font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Miles </span><span style="font-family:system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;font-weight:700;color:var(--accent)" id="empTotalMiles">0</span></div>
@@ -679,10 +696,18 @@ function periodStart(){return S.settings['period_start']||new Date().toISOString
 function periods(n=30){
   const a=new Date(periodStart()+'T00:00:00'),t=new Date();let s=new Date(a);
   while(true){const nx=new Date(s);nx.setDate(nx.getDate()+14);if(nx>t)break;s=nx;}
+  // s is now the start of the period containing (or most recently before) today
   const base=new Date(s);base.setDate(base.getDate()-14*(n-1));
   return Array.from({length:n+4},(_,i)=>{const x=new Date(base);x.setDate(x.getDate()+14*i);const y=new Date(x);y.setDate(y.getDate()+13);return{start:x,end:y};});
 }
-function curPeriodIdx(){const ps=periods(),t=new Date();for(let i=0;i<ps.length;i++)if(t>=ps[i].start&&t<=ps[i].end)return i;return ps.length-4;}
+function curPeriodIdx(){
+  const ps=periods(),t=new Date();
+  for(let i=0;i<ps.length;i++){
+    const endOfDay=new Date(ps[i].end);endOfDay.setHours(23,59,59,999);
+    if(t>=ps[i].start&&t<=endOfDay)return i;
+  }
+  return ps.length-4;
+}
 const pLabel=p=>`${p.start.toLocaleDateString('en-US',{month:'short',day:'numeric'})} - ${p.end.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`;
 const today=()=>new Date().toISOString().slice(0,10);
 const fmt=d=>new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
@@ -947,6 +972,7 @@ function toggleAMPM(el){
   syncManTimes();
 }
 function ampmKey(e,el,nextId){
+  if(e.key==='Tab'&&e.shiftKey)return; // allow shift+tab to go backwards normally
   if(e.key==='Tab'||e.key===' '||e.key==='Enter'){
     e.preventDefault();
     if(e.key===' '||e.key==='Enter'){
@@ -1219,6 +1245,27 @@ function renderEmpEntries(){
   document.getElementById('empTotalHours').textContent=fmtDur(totalH);
   document.getElementById('empTotalMiles').textContent=miles.reduce((s,m)=>s+m.miles,0).toFixed(1);
   document.getElementById('empDaysWorked').textContent=[...new Set(entries.map(e=>e.date))].length;
+  // Weekly total bars (based on current pay period, regardless of date filter)
+  const wb=document.getElementById('empWeekBars');
+  if(wb){
+    const cp2=periods()[curPeriodIdx()];
+    const pStart=cp2.start.toISOString().slice(0,10);
+    const pEnd=cp2.end.toISOString().slice(0,10);
+    const w1EndD=new Date(cp2.start);w1EndD.setDate(w1EndD.getDate()+6);
+    const w1End=w1EndD.toISOString().slice(0,10);
+    const pdEntries=S.entries.filter(e=>e.employee_id===selEmpId&&e.end_ts&&e.date>=pStart&&e.date<=pEnd);
+    const w1H=pdEntries.filter(e=>e.date<=w1End).reduce((s,e)=>s+(e.hours||0),0);
+    const w2H=pdEntries.filter(e=>e.date>w1End).reduce((s,e)=>s+(e.hours||0),0);
+    const pdH=w1H+w2H;
+    wb.style.display='block';
+    const cap=Math.max(w1H,w2H,40); // scale bars against 40h or the bigger week
+    document.getElementById('empW1Bar').style.width=Math.min(100,(w1H/cap)*100)+'%';
+    document.getElementById('empW2Bar').style.width=Math.min(100,(w2H/cap)*100)+'%';
+    document.getElementById('empPdBar').style.width=Math.min(100,(pdH/(cap*2))*100)+'%';
+    document.getElementById('empW1Total').textContent=fmtDur(w1H);
+    document.getElementById('empW2Total').textContent=fmtDur(w2H);
+    document.getElementById('empPdTotal').textContent=fmtDur(pdH);
+  }
   // Render mileage history
   const mileWrap=document.getElementById('empMileageWrap');
   const mileTotal=document.getElementById('empMileTotal');
