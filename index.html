@@ -1020,21 +1020,13 @@ function setTimeSelectors(prefix, timeStr){
   let h=parseInt(hStr),m=parseInt(mStr)||0;
   const ap=h>=12?'PM':'AM';
   const h12=h%12||12;
-  if(prefix==='manStart'){
-    const hEl=document.getElementById('manStartHH');
-    const mEl=document.getElementById('manStartMM');
-    const aEl=document.getElementById('manStartAP');
-    if(hEl)hEl.value=String(h12).padStart(2,'0');
-    if(mEl)mEl.value=String(m).padStart(2,'0');
-    if(aEl)aEl.value=ap;
-  } else {
-    const hEl=document.getElementById('manEndHH');
-    const mEl=document.getElementById('manEndMM');
-    const aEl=document.getElementById('manEndAP');
-    if(hEl)hEl.value=String(h12).padStart(2,'0');
-    if(mEl)mEl.value=String(m).padStart(2,'0');
-    if(aEl)aEl.value=ap;
-  }
+  const hEl=document.getElementById(prefix+'HH');
+  const mEl=document.getElementById(prefix+'MM');
+  const aEl=document.getElementById(prefix+'AP');
+  if(hEl)hEl.value=String(h12).padStart(2,'0');
+  if(mEl)mEl.value=String(m).padStart(2,'0');
+  if(aEl)aEl.value=ap;
+  // Write the hidden 24hr field and refresh duration/overlap
   syncManTimes();
 }
 
@@ -1052,51 +1044,9 @@ function parseTimeInput(val){
 function initTimeSelectors(){}
 function syncHiddenTime(){}
 
-function syncHiddenTime_unused(prefix){
-  const h=document.getElementById(prefix+'H')?.value;
-  const m=document.getElementById(prefix+'M')?.value;
-  const ampm=document.getElementById(prefix+'AMPM')?.value;
-  if(!h||!m||!ampm)return;
-  let hour24=parseInt(h);
-  if(ampm==='AM'&&hour24===12)hour24=0;
-  if(ampm==='PM'&&hour24!==12)hour24+=12;
-  const timeStr=String(hour24).padStart(2,'0')+':'+m;
-  const hidden=document.getElementById(prefix.replace('man','man').replace('Start','Start').replace('End','End'));
-  // Set the hidden input
-  if(prefix==='manStart')document.getElementById('manStart').value=timeStr;
-  else document.getElementById('manEnd').value=timeStr;
-}
 
-function setTimeSelectors(prefix, timeStr){
-  // timeStr is HH:MM (24hr)
-  if(!timeStr)return;
-  const [hStr,mStr]=timeStr.split(':');
-  let h=parseInt(hStr),m=parseInt(mStr);
-  const ampm=h>=12?'PM':'AM';
-  const h12=h%12||12;
-  const hEl=document.getElementById(prefix+'H');
-  const mEl=document.getElementById(prefix+'M');
-  const aEl=document.getElementById(prefix+'AMPM');
-  if(hEl)hEl.value=String(h12).padStart(2,'0');
-  if(mEl){
-    // Find closest 5-min slot
-    const rounded=Math.round(m/5)*5%60;
-    mEl.value=String(rounded).padStart(2,'0');
-  }
-  if(aEl)aEl.value=ampm;
-  syncHiddenTime(prefix);
-}
 
-function getTimeStr(prefix){
-  const h=document.getElementById(prefix+'H')?.value;
-  const m=document.getElementById(prefix+'M')?.value;
-  const ampm=document.getElementById(prefix+'AMPM')?.value;
-  if(!h||!m||!ampm)return'';
-  let hour24=parseInt(h);
-  if(ampm==='AM'&&hour24===12)hour24=0;
-  if(ampm==='PM'&&hour24!==12)hour24+=12;
-  return String(hour24).padStart(2,'0')+':'+m;
-}
+
 
 function updateDur(){
   const date=document.getElementById('manDate')?.value,el=document.getElementById('manDur');if(!el)return;
