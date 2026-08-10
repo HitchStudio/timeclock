@@ -308,12 +308,16 @@ tfoot td{border-top:2px solid var(--border);font-weight:600!important;color:var(
         <div class="entries-header">
           <span style="font-size:.7rem;font-weight:700;color:var(--text3);letter-spacing:1.5px">&#128663; MY MILEAGE</span>
           <div class="flex-center" style="gap:5px">
+            <button class="btn btn-ghost btn-sm" onclick="empMilePrevPeriod()">&#8592;</button>
             <span class="period-badge" id="empMilePeriodBadge"></span>
+            <button class="btn btn-ghost btn-sm" onclick="empMileNextPeriod()">&#8594;</button>
+            <button class="btn btn-ghost btn-sm" onclick="empMileAllTime()" id="empMileAllBtn">All Time</button>
           </div>
         </div>
         <div id="empMileageWrap"><div class="empty-state" style="padding:14px">No mileage logged yet.</div></div>
-        <div class="entries-footer">
-          <div><span style="font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Total Miles </span><span style="font-family:system-ui;font-weight:700;color:var(--accent)" id="empMileTotal">0.0</span></div>
+        <div class="entries-footer" style="justify-content:space-between">
+          <div><span style="font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Period Miles </span><span style="font-family:system-ui;font-weight:700;color:var(--accent)" id="empMileTotal">0.0</span></div>
+          <div><span style="font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">All-Time Miles </span><span style="font-family:system-ui;font-weight:700;color:var(--accent2)" id="empMileAllTotal">0.0</span></div>
         </div>
       </div>
 
@@ -547,14 +551,34 @@ tfoot td{border-top:2px solid var(--border);font-weight:600!important;color:var(
       <div id="tab-export" style="display:none">
         <div class="card">
           <div class="card-title">Export Payroll</div>
-          <div class="grid2 mb8">
+          <div class="mb8"><label>Date Range Mode</label>
+            <div style="display:flex;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:3px;max-width:340px">
+              <button id="expModePeriod" onclick="setExpMode('period')" style="flex:1;border:none;padding:7px;font-size:.8rem;font-weight:600;cursor:pointer;background:var(--accent);color:#fff;border-radius:6px">Pay Period</button>
+              <button id="expModeCustom" onclick="setExpMode('custom')" style="flex:1;border:none;padding:7px;font-size:.8rem;font-weight:600;cursor:pointer;background:transparent;color:var(--text2);border-radius:6px">Custom Range</button>
+            </div>
+          </div>
+          <div class="grid2 mb8" id="expPeriodRow">
             <div><label>Pay Period</label><select id="expPeriod" onchange="renderExpPreview()"></select></div>
             <div><label>Employee</label><select id="expEmp" onchange="renderExpPreview()"><option value="">All Employees</option></select></div>
           </div>
+          <div id="expCustomRow" style="display:none">
+            <div class="grid3 mb8">
+              <div><label>From Date</label><input type="date" id="expFrom" onchange="renderExpPreview()"></div>
+              <div><label>To Date</label><input type="date" id="expTo" onchange="renderExpPreview()"></div>
+              <div><label>Employee</label><select id="expEmpCustom" onchange="renderExpPreview()"><option value="">All Employees</option></select></div>
+            </div>
+            <div class="flex-center mb8" style="gap:5px">
+              <button class="btn btn-ghost btn-sm" onclick="expQuickRange('ytd')">Year to Date</button>
+              <button class="btn btn-ghost btn-sm" onclick="expQuickRange('30')">Last 30 Days</button>
+              <button class="btn btn-ghost btn-sm" onclick="expQuickRange('90')">Last 90 Days</button>
+              <button class="btn btn-ghost btn-sm" onclick="expQuickRange('year')">This Year</button>
+              <button class="btn btn-ghost btn-sm" onclick="expQuickRange('lastyear')">Last Year</button>
+            </div>
+          </div>
           <div class="alert alert-info mb8">Exports employee, date, times, hours (1h 23m + decimal), project, category, notes, mileage.</div>
           <div class="flex-center">
-            <button class="btn btn-success" onclick="exportPayroll()">&#11015; Pay Period Excel</button>
-            <button class="btn btn-primary" onclick="exportAll()">&#11015; ALL Entries Excel</button>
+            <button class="btn btn-success" onclick="exportPayroll()">&#11015; Summary Excel</button>
+            <button class="btn btn-primary" onclick="exportDetailed()">&#11015; Detailed Excel</button>
             <button class="btn btn-ghost" onclick="exportCSV()">&#11015; CSV</button>
           </div>
         </div>
@@ -723,6 +747,7 @@ let activePeriodIdx=null;
 
 // EMPLOYEE LOGIN
 let selEmp=null,selEmpId=null;
+let empMilePeriodIdx=null; // null = all-time view for employee mileage
 function renderNameGrid(){
   const g=document.getElementById('nameGrid');
   const q=(document.getElementById('empSearch')?.value||'').toLowerCase();
@@ -804,6 +829,7 @@ async function enterEmployeeView(){
   }
   initTimeSelectors();
   prefillLastEntry();
+  empMilePeriodIdx=curPeriodIdx();
   renderEmpEntries();
 }
 function prefillLastEntry(){
@@ -1157,6 +1183,20 @@ async function addMileage(){
   }catch(e){toast('Error: '+e.message);}
 }
 
+function empMilePrevPeriod(){
+  if(empMilePeriodIdx===null)empMilePeriodIdx=curPeriodIdx();
+  empMilePeriodIdx=Math.max(0,empMilePeriodIdx-1);
+  renderEmpEntries();
+}
+function empMileNextPeriod(){
+  if(empMilePeriodIdx===null)empMilePeriodIdx=curPeriodIdx();
+  empMilePeriodIdx=Math.min(periods().length-1,empMilePeriodIdx+1);
+  renderEmpEntries();
+}
+function empMileAllTime(){
+  empMilePeriodIdx=null;
+  renderEmpEntries();
+}
 function renderEmpEntries(){
   const from=document.getElementById('empFrom')?.value||'',to=document.getElementById('empTo')?.value||'';
   let entries=S.entries.filter(e=>e.employee_id===selEmpId&&e.end_ts);
@@ -1216,20 +1256,33 @@ function renderEmpEntries(){
     document.getElementById('empW2Total').textContent=fmtDur(w2H);
     document.getElementById('empPdTotal').textContent=fmtDur(pdH);
   }
-  // Render mileage history
+  // Render mileage history (independent pay-period navigator)
   const mileWrap=document.getElementById('empMileageWrap');
   const mileTotal=document.getElementById('empMileTotal');
+  const mileAllTotal=document.getElementById('empMileAllTotal');
   const milePeriodBadge=document.getElementById('empMilePeriodBadge');
   if(mileWrap){
     const allMiles=S.mileage.filter(m=>m.employee_id===selEmpId).sort((a,b)=>b.date.localeCompare(a.date));
-    const periodMiles=miles;
-    if(milePeriodBadge)milePeriodBadge.textContent=document.getElementById('empPeriodBadge').textContent;
-    if(!periodMiles.length){
+    // All-time total always shown
+    if(mileAllTotal)mileAllTotal.textContent=allMiles.reduce((s,m)=>s+m.miles,0).toFixed(1);
+    let shownMiles, badgeText;
+    if(empMilePeriodIdx===null){
+      // All-time view
+      shownMiles=allMiles;badgeText='All Time';
+      const ab=document.getElementById('empMileAllBtn');if(ab){ab.style.background='var(--accent)';ab.style.color='#fff';}
+    }else{
+      const mp=periods()[empMilePeriodIdx];
+      const mps=mp.start.toISOString().slice(0,10),mpe=mp.end.toISOString().slice(0,10);
+      shownMiles=allMiles.filter(m=>m.date>=mps&&m.date<=mpe);badgeText=pLabel(mp);
+      const ab=document.getElementById('empMileAllBtn');if(ab){ab.style.background='';ab.style.color='';}
+    }
+    if(milePeriodBadge)milePeriodBadge.textContent=badgeText;
+    if(!shownMiles.length){
       mileWrap.innerHTML='<div class="empty-state" style="padding:14px">No mileage for this period.</div>';
     }else{
-      mileWrap.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:.82rem"><thead><tr style="background:var(--surface2)"><th style="padding:7px 14px;text-align:left;font-size:.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)">Date</th><th style="padding:7px 14px;text-align:left;font-size:.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)">Miles</th><th style="padding:7px 14px;text-align:left;font-size:.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)">Purpose</th><th style="padding:7px 14px"></th></tr></thead><tbody>${periodMiles.map(m=>`<tr style="border-bottom:1px solid var(--border)"><td style="padding:9px 14px;color:var(--text2)">${fmt(m.date)}</td><td style="padding:9px 14px;font-weight:600;color:var(--accent)">${m.miles.toFixed(1)}</td><td style="padding:9px 14px;color:var(--text2)">${m.purpose||''}</td><td style="padding:9px 14px"><button class="delete-btn" onclick="delEmpMile(${m.id})">x</button></td></tr>`).join('')}</tbody></table>`;
+      mileWrap.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:.82rem"><thead><tr style="background:var(--surface2)"><th style="padding:7px 14px;text-align:left;font-size:.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)">Date</th><th style="padding:7px 14px;text-align:left;font-size:.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)">Miles</th><th style="padding:7px 14px;text-align:left;font-size:.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3)">Purpose</th><th style="padding:7px 14px"></th></tr></thead><tbody>${shownMiles.map(m=>`<tr style="border-bottom:1px solid var(--border)"><td style="padding:9px 14px;color:var(--text2)">${fmt(m.date)}</td><td style="padding:9px 14px;font-weight:600;color:var(--accent)">${m.miles.toFixed(1)}</td><td style="padding:9px 14px;color:var(--text2)">${m.purpose||''}</td><td style="padding:9px 14px"><button class="delete-btn" onclick="delEmpMile(${m.id})">x</button></td></tr>`).join('')}</tbody></table>`;
     }
-    if(mileTotal)mileTotal.textContent=periodMiles.reduce((s,m)=>s+m.miles,0).toFixed(1);
+    if(mileTotal)mileTotal.textContent=shownMiles.reduce((s,m)=>s+m.miles,0).toFixed(1);
   }
 }
 async function delEmpEntry(id){if(!confirm('Delete?'))return;await db.del('time_entries','id=eq.'+id);S.entries=S.entries.filter(e=>e.id!==id);renderEmpEntries();toast('Deleted.');}
@@ -1453,7 +1506,7 @@ function clearMileF(){['fMileFrom','fMileTo','fMileEmp'].forEach(id=>document.ge
 async function delMile(id){if(!confirm('Delete?'))return;await db.del('mileage','id=eq.'+id);S.mileage=S.mileage.filter(m=>m.id!==id);renderMileage();toast('Deleted.');}
 
 function populateFilters(){
-  ['fEmp','expEmp'].forEach(id=>{const s=document.getElementById(id),cur=s.value;s.innerHTML='<option value="">All Employees</option>'+S.employees.map(e=>`<option>${e.name}</option>`).join('');if(cur)s.value=cur;});
+  ['fEmp','expEmp','expEmpCustom'].forEach(id=>{const s=document.getElementById(id);if(!s)return;const cur=s.value;s.innerHTML='<option value="">All Employees</option>'+S.employees.map(e=>`<option>${e.name}</option>`).join('');if(cur)s.value=cur;});
   document.getElementById('fProj').innerHTML='<option value="">All Projects</option>'+S.projects.map(p=>`<option>${p.name}</option>`).join('');
   document.getElementById('fCat').innerHTML='<option value="">All Categories</option>'+S.categories.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
   document.getElementById('fMileEmp').innerHTML='<option value="">All Employees</option>'+S.employees.map(e=>`<option>${e.name}</option>`).join('');
@@ -1549,13 +1602,51 @@ function dlBackup(){
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(b,null,2)],{type:'application/json'}));a.download='TimeClock_Backup_'+today()+'.json';a.click();toast('Backup downloaded!');
 }
 
+let expMode='period';
 function renderExportTab(){
-  const ps=periods(30).reverse();document.getElementById('expPeriod').innerHTML=ps.map((p,i)=>`<option value="${i}">${pLabel(p)}</option>`).join('');populateFilters();
+  const ps=periods(30).reverse();document.getElementById('expPeriod').innerHTML=ps.map((p,i)=>`<option value="${i}">${pLabel(p)}</option>`).join('');
+  populateFilters();
+  // default custom range: Jan 1 this year -> today
+  const y=new Date().getFullYear();
+  if(document.getElementById('expFrom')&&!document.getElementById('expFrom').value)document.getElementById('expFrom').value=y+'-01-01';
+  if(document.getElementById('expTo')&&!document.getElementById('expTo').value)document.getElementById('expTo').value=today();
+}
+function setExpMode(mode){
+  expMode=mode;
+  document.getElementById('expModePeriod').style.background=mode==='period'?'var(--accent)':'transparent';
+  document.getElementById('expModePeriod').style.color=mode==='period'?'#fff':'var(--text2)';
+  document.getElementById('expModeCustom').style.background=mode==='custom'?'var(--accent)':'transparent';
+  document.getElementById('expModeCustom').style.color=mode==='custom'?'#fff':'var(--text2)';
+  document.getElementById('expPeriodRow').style.display=mode==='period'?'grid':'none';
+  document.getElementById('expCustomRow').style.display=mode==='custom'?'block':'none';
+  renderExpPreview();
+}
+function expQuickRange(kind){
+  const t=new Date(),y=t.getFullYear();
+  const fromEl=document.getElementById('expFrom'),toEl=document.getElementById('expTo');
+  if(kind==='ytd'||kind==='year'){fromEl.value=y+'-01-01';toEl.value=today();}
+  else if(kind==='lastyear'){fromEl.value=(y-1)+'-01-01';toEl.value=(y-1)+'-12-31';}
+  else if(kind==='30'){const d=new Date(t);d.setDate(d.getDate()-30);fromEl.value=d.toISOString().slice(0,10);toEl.value=today();}
+  else if(kind==='90'){const d=new Date(t);d.setDate(d.getDate()-90);fromEl.value=d.toISOString().slice(0,10);toEl.value=today();}
+  renderExpPreview();
+}
+// Returns the active export range based on mode
+function getExpRange(){
+  if(expMode==='custom'){
+    const from=document.getElementById('expFrom').value||'2000-01-01';
+    const to=document.getElementById('expTo').value||today();
+    const emp=document.getElementById('expEmpCustom').value;
+    const fromD=new Date(from+'T00:00:00'),toD=new Date(to+'T00:00:00');
+    const label=fromD.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' - '+toD.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    return {ps:from,pe:to,emp,label};
+  } else {
+    const p=getExpPeriod(),emp=document.getElementById('expEmp').value;
+    return {ps:p.start.toISOString().slice(0,10),pe:p.end.toISOString().slice(0,10),emp,label:pLabel(p)};
+  }
 }
 function getExpPeriod(){return periods(30).reverse()[parseInt(document.getElementById('expPeriod').value)||0];}
 function renderExpPreview(){
-  const p=getExpPeriod(),emp=document.getElementById('expEmp').value;
-  const ps=p.start.toISOString().slice(0,10),pe=p.end.toISOString().slice(0,10);
+  const {ps,pe,emp}=getExpRange();
   let entries=S.entries.filter(e=>e.end_ts&&e.date>=ps&&e.date<=pe);if(emp)entries=entries.filter(e=>EN(e.employee_id)===emp);
   let miles=S.mileage.filter(m=>m.date>=ps&&m.date<=pe);if(emp)miles=miles.filter(m=>EN(m.employee_id)===emp);
   const wrap=document.getElementById('expPreview');
@@ -1571,8 +1662,7 @@ function buildExpData(entries,miles,label){
   return rows;
 }
 function exportPayroll(){
-  const p=getExpPeriod(),emp=document.getElementById('expEmp').value;
-  const ps=p.start.toISOString().slice(0,10),pe=p.end.toISOString().slice(0,10);
+  const {ps,pe,emp,label}=getExpRange();
   let entries=S.entries.filter(e=>e.end_ts&&e.date>=ps&&e.date<=pe);if(emp)entries=entries.filter(e=>EN(e.employee_id)===emp);
   let miles=S.mileage.filter(m=>m.date>=ps&&m.date<=pe);if(emp)miles=miles.filter(m=>EN(m.employee_id)===emp);
   if(!entries.length&&!miles.length){toast('No data.');return;}
@@ -1583,10 +1673,24 @@ function exportPayroll(){
   const summaryData=ae.map(e=>({'Employee':e,'Total Hours Worked':fmtDur(byEmp[e]||0),'Total Mileage':(byEmpM[e]||0).toFixed(1)+' mi'}));
   const wb=XLSX.utils.book_new();
   const ws=XLSX.utils.json_to_sheet(summaryData);
-  // Set column widths
   ws['!cols']=[{wch:25},{wch:20},{wch:15}];
-  XLSX.utils.book_append_sheet(wb,ws,'Payroll - '+pLabel(p));
-  XLSX.writeFile(wb,'Payroll_'+p.start.toISOString().slice(0,10)+'.xlsx');toast('Payroll Excel downloaded!');
+  const sheetName=('Summary '+label).slice(0,31);
+  XLSX.utils.book_append_sheet(wb,ws,sheetName);
+  XLSX.writeFile(wb,'Payroll_'+ps+'_to_'+pe+'.xlsx');toast('Summary Excel downloaded!');
+}
+function exportDetailed(){
+  const {ps,pe,emp,label}=getExpRange();
+  let entries=S.entries.filter(e=>e.end_ts&&e.date>=ps&&e.date<=pe);if(emp)entries=entries.filter(e=>EN(e.employee_id)===emp);
+  entries.sort((a,b)=>new Date(a.start_ts)-new Date(b.start_ts));
+  let miles=S.mileage.filter(m=>m.date>=ps&&m.date<=pe);if(emp)miles=miles.filter(m=>EN(m.employee_id)===emp);
+  const data=buildExpData(entries,miles,label);if(!data.length){toast('No data.');return;}
+  const ws=XLSX.utils.json_to_sheet(data),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Entries');
+  const byEmp={};entries.forEach(e=>{const n=EN(e.employee_id);if(n==='?')return;if(!byEmp[n])byEmp[n]={hours:0,miles:0};byEmp[n].hours+=e.hours||0;});
+  miles.forEach(m=>{const n=EN(m.employee_id);if(n==='?')return;if(!byEmp[n])byEmp[n]={hours:0,miles:0};byEmp[n].miles+=m.miles;});
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(Object.entries(byEmp).sort((a,b)=>a[0].localeCompare(b[0])).map(([n,d])=>({'Employee':n,'Total Hours':fmtDur(d.hours),'Hours (decimal)':d.hours.toFixed(2),'Total Miles':d.miles.toFixed(1)}))),'Summary by Employee');
+  const byCat={};entries.forEach(e=>{const c=PC(e.project_id)?.name||'Untagged';byCat[c]=(byCat[c]||0)+(e.hours||0);});
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([c,h])=>({'Category':c,'Total Hours':fmtDur(h),'Hours (decimal)':h.toFixed(2)}))),'Summary by Category');
+  XLSX.writeFile(wb,'Detailed_'+ps+'_to_'+pe+'.xlsx');toast('Detailed Excel downloaded!');
 }
 function exportAll(){
   const entries=S.entries.filter(e=>e.end_ts).sort((a,b)=>new Date(a.start_ts)-new Date(b.start_ts));
@@ -1600,13 +1704,13 @@ function exportAll(){
   XLSX.writeFile(wb,'AllEntries_'+today()+'.xlsx');toast('Full export downloaded!');
 }
 function exportCSV(){
-  const p=getExpPeriod(),emp=document.getElementById('expEmp').value;
-  const ps=p.start.toISOString().slice(0,10),pe=p.end.toISOString().slice(0,10);
+  const {ps,pe,emp,label}=getExpRange();
   let entries=S.entries.filter(e=>e.end_ts&&e.date>=ps&&e.date<=pe);if(emp)entries=entries.filter(e=>EN(e.employee_id)===emp);
-  const data=buildExpData(entries,[],pLabel(p));if(!data.length){toast('No data.');return;}
+  let miles=S.mileage.filter(m=>m.date>=ps&&m.date<=pe);if(emp)miles=miles.filter(m=>EN(m.employee_id)===emp);
+  const data=buildExpData(entries,miles,label);if(!data.length){toast('No data.');return;}
   const headers=Object.keys(data[0]);
   const csv=[headers.join(','),...data.map(r=>headers.map(h=>JSON.stringify(r[h]??'')).join(','))].join('\n');
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='Payroll_'+p.start.toISOString().slice(0,10)+'.csv';a.click();toast('CSV downloaded!');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='Export_'+ps+'_to_'+pe+'.csv';a.click();toast('CSV downloaded!');
 }
 
 function switchView(v){
